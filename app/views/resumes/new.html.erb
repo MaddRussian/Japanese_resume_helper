@@ -1,0 +1,41 @@
+<%= form_with model: @resume, local: true do |f| %>
+  <%= f.label :title %>
+  <%= f.text_field :title %>
+  <%= f.label :summary %>
+  <%= f.text_area :summary %>
+  <h2>Education</h2>
+  <%= f.fields_for :educations do |ed| %>
+    <%= ed.label :school_name %>
+    <%= ed.text_field :school_name %>
+    <%= ed.label :degree %>
+    <%= ed.text_field :degree %>
+    <%= ed.label :start_date %>
+    <%= ed.date_field :start_date %>
+    <%= ed.label :end_date %>
+    <%= ed.date_field :end_date %>
+    <hr>
+  <% end %>
+  <h2>Experience</h2>
+  <%= f.fields_for :experiences do |exp| %>
+    <%= exp.label :company_name %>
+    <%= exp.text_field :company_name %>
+    <%= exp.label :position %>
+    <%= exp.text_field :position %>
+    <%= exp.label :start_date %>
+    <%= exp.date_field :start_date %>
+    <%= exp.label :end_date %>
+    <%= exp.date_field :end_date %>
+    <%= exp.label :description %>
+    <%= exp.text_area :description %>
+    <hr>
+  <% end %>
+  <h2>Skills</h2>
+  <%= f.fields_for :skills do |skill| %>
+    <%= skill.label :name %>
+    <%= skill.text_field :name %>
+    <%= skill.label :level %>
+    <%= skill.select :level, ["Beginner", "Intermediate", "Advanced"] %>
+    <hr>
+  <% end %>
+  <%= f.submit "Create Resume" %>
+<% end %>
