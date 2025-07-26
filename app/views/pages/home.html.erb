@@ -1,2 +1,139 @@
-<h1>Pages#home</h1>
-<p>Find me in app/views/pages/home.html.erb</p>
+<div class="container-fluid">
+  <!-- Hero Section -->
+  <div class="row bg-light text-dark py-5">
+    <div class="col-md-8 mx-auto text-center">
+      <h1 class="display-4 fw-bold mb-4 text-primary">Create Professional Japanese Resumes & Job History</h1>
+      <p class="lead mb-3">Build both 履歴書 (Resume) and 職務経歴書 (Job History) for the Japanese job market.</p>
+      <p class="lead mb-4">Japanese companies require both documents. Stand out with perfectly formatted, culturally-appropriate documents that follow Japanese business standards.</p>
+      <div class="d-flex justify-content-center gap-3">
+        <% if user_signed_in? %>
+          <%= link_to "Create Your Documents", new_resume_path, class: "btn btn-primary btn-lg px-4" %>
+        <% else %>
+          <%= link_to "Get Started", new_user_registration_path, class: "btn btn-primary btn-lg px-4" %>
+          <%= link_to "Sign In", new_user_session_path, class: "btn btn-outline-primary btn-lg px-4" %>
+        <% end %>
+      </div>
+    </div>
+  </div>
+  <!-- Features Section -->
+  <div class="row py-5">
+    <div class="col-md-10 mx-auto">
+      <h2 class="text-center mb-5">Why Choose Our Japanese Document Builder?</h2>
+      <div class="row g-4">
+        <div class="col-md-4">
+          <div class="card h-100 border-0 shadow-sm">
+            <div class="card-body text-center p-4">
+              <i class="fas fa-globe-asia fa-3x text-primary mb-3"></i>
+              <h5 class="card-title">Japanese Business Standards</h5>
+              <p class="card-text">Templates and formatting that follow Japanese business culture and expectations for both 履歴書 and 職務経歴書.</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="card h-100 border-0 shadow-sm">
+            <div class="card-body text-center p-4">
+              <i class="fas fa-file-alt fa-3x text-primary mb-3"></i>
+              <h5 class="card-title">Complete Document Set</h5>
+              <p class="card-text">Create both required documents: 履歴書 (Resume) and 職務経歴書 (Job History) in one place.</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="card h-100 border-0 shadow-sm">
+            <div class="card-body text-center p-4">
+              <i class="fas fa-edit fa-3x text-primary mb-3"></i>
+              <h5 class="card-title">Easy to Use</h5>
+              <p class="card-text">Simple, intuitive interface that guides you through creating professional documents step by step.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Document Types Section -->
+  <div class="row bg-light py-5">
+    <div class="col-md-10 mx-auto">
+      <h2 class="text-center mb-5">Japanese Job Application Documents</h2>
+      <div class="row g-4">
+        <div class="col-md-6">
+          <div class="card h-100 border-0 shadow">
+            <div class="card-body p-4">
+              <h4 class="card-title text-primary">履歴書 (Rirekisho)</h4>
+              <h6 class="text-muted">Personal Resume</h6>
+              <p class="card-text">Traditional Japanese resume format including:</p>
+              <ul class="list-unstyled">
+                <li><i class="fas fa-check text-success me-2"></i>Personal information</li>
+                <li><i class="fas fa-check text-success me-2"></i>Education history</li>
+                <li><i class="fas fa-check text-success me-2"></i>Basic qualifications</li>
+                <li><i class="fas fa-check text-success me-2"></i>Contact details</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="card h-100 border-0 shadow">
+            <div class="card-body p-4">
+              <h4 class="card-title text-primary">職務経歴書 (Shokumu Keirekisho)</h4>
+              <h6 class="text-muted">Job History & Experience</h6>
+              <p class="card-text">Detailed work experience document including:</p>
+              <ul class="list-unstyled">
+                <li><i class="fas fa-check text-success me-2"></i>Work experience details</li>
+                <li><i class="fas fa-check text-success me-2"></i>Project descriptions</li>
+                <li><i class="fas fa-check text-success me-2"></i>Skills and achievements</li>
+                <li><i class="fas fa-check text-success me-2"></i>Professional accomplishments</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- How It Works Section -->
+  <div class="row py-5">
+    <div class="col-md-10 mx-auto">
+      <h2 class="text-center mb-5">How It Works</h2>
+      <div class="row g-4">
+        <div class="col-md-3 text-center">
+          <div class="bg-primary text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 60px; height: 60px;">
+            <span class="fw-bold">1</span>
+          </div>
+          <h5>Sign Up</h5>
+          <p>Create your account in seconds</p>
+        </div>
+        <div class="col-md-3 text-center">
+          <div class="bg-primary text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 60px; height: 60px;">
+            <span class="fw-bold">2</span>
+          </div>
+          <h5>Fill Details</h5>
+          <p>Add your experience, education, and skills</p>
+        </div>
+        <div class="col-md-3 text-center">
+          <div class="bg-primary text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 60px; height: 60px;">
+            <span class="fw-bold">3</span>
+          </div>
+          <h5>Generate Documents</h5>
+          <p>Create both 履歴書 and 職務経歴書</p>
+        </div>
+        <div class="col-md-3 text-center">
+          <div class="bg-primary text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 60px; height: 60px;">
+            <span class="fw-bold">4</span>
+          </div>
+          <h5>Download & Apply</h5>
+          <p>Get your documents ready for applications</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- CTA Section -->
+  <div class="row bg-light py-5">
+    <div class="col-md-8 mx-auto text-center">
+      <h2 class="mb-4">Ready to Create Your Japanese Documents?</h2>
+      <p class="lead mb-4">Join professionals who have successfully created both 履歴書 and 職務経歴書 for the Japanese job market.</p>
+      <% if user_signed_in? %>
+        <%= link_to "Create Documents Now", new_resume_path, class: "btn btn-primary btn-lg px-5" %>
+      <% else %>
+        <%= link_to "Start Building Your Documents", new_user_registration_path, class: "btn btn-primary btn-lg px-5" %>
+      <% end %>
+    </div>
+  </div>
+</div>
