@@ -5,7 +5,4 @@ class User < ApplicationRecord
          :recoverable, :rememberable, :validatable
 
   has_many :resumes
-
-  validates :address, presence: true
-  validates :phone_number, presence: true
 end
