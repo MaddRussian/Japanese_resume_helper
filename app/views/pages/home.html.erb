@@ -9,7 +9,7 @@
         <% if user_signed_in? %>
           <%= link_to "Create Your Documents", new_resume_path, class: "btn btn-primary btn-lg px-4" %>
         <% else %>
-          <%= link_to "Get Started", new_user_registration_path, class: "btn btn-primary btn-lg px-4" %>
+          <%= link_to "Sign Up Free", new_user_registration_path, class: "btn btn-primary btn-lg px-4" %>
           <%= link_to "Sign In", new_user_session_path, class: "btn btn-outline-primary btn-lg px-4" %>
         <% end %>
       </div>
@@ -130,9 +130,9 @@
       <h2 class="mb-4">Ready to Create Your Japanese Documents?</h2>
       <p class="lead mb-4">Join professionals who have successfully created both 履歴書 and 職務経歴書 for the Japanese job market.</p>
       <% if user_signed_in? %>
-        <%= link_to "Create Documents Now", new_resume_path, class: "btn btn-primary btn-lg px-5" %>
+        <%= link_to "Create Your First Resume", new_resume_path, class: "btn btn-primary btn-lg px-5" %>
       <% else %>
-        <%= link_to "Start Building Your Documents", new_user_registration_path, class: "btn btn-primary btn-lg px-5" %>
+        <%= link_to "Start Building Your Resume", new_user_registration_path, class: "btn btn-primary btn-lg px-5" %>
       <% end %>
     </div>
   </div>
