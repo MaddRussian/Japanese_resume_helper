@@ -130,28 +130,26 @@
             <!-- Skills Section -->
             <div class="mb-4">
               <h4 class="text-primary mb-3"><i class="fas fa-tools me-2"></i>Skills</h4>
-              <div id="skill-fields">
+              <div class="mb-3">
+                <label class="form-label fw-bold">Add Skills</label>
+                <div class="input-group">
+                  <input type="text" id="skill-input" class="form-control" placeholder="e.g., JavaScript, Project Management, Japanese (N1)" onkeypress="handleSkillKeyPress(event)">
+                  <button type="button" class="btn btn-outline-primary" onclick="addSkillFromInput()">
+                    <i class="fas fa-plus"></i>
+                  </button>
+                </div>
+                <small class="text-muted">Press Enter or click the + button to add a skill</small>
+              </div>
+              <div id="skill-tags" class="mb-3">
+                <!-- Skills will be displayed as tags here -->
+              </div>
+              <!-- Hidden form fields for Rails -->
+              <div id="skill-fields" style="display: none;">
                 <%= f.fields_for :skills do |skill| %>
-                  <div class="skill-entry card mb-3">
-                    <div class="card-body">
-                      <div class="d-flex justify-content-between align-items-start mb-3">
-                        <h6 class="text-muted mb-0">Skill Entry</h6>
-                        <button type="button" class="btn btn-outline-danger btn-sm" onclick="removeField(this)">
-                          <i class="fas fa-trash"></i>
-                        </button>
-                      </div>
-                      <div class="mb-3">
-                        <%= skill.label :name, "Skill Name", class: "form-label fw-bold" %>
-                        <%= skill.text_field :name, class: "form-control skill-field", placeholder: "e.g., JavaScript, Project Management, Japanese (N1)" %>
-                      </div>
-                    </div>
+                  <div class="skill-entry">
+                    <%= skill.text_field :name, class: "form-control skill-field" %>
                   </div>
                 <% end %>
-              </div>
-              <div class="text-center mt-3">
-                <button type="button" class="btn btn-outline-primary" id="add-skill-btn" onclick="addSkill()" disabled>
-                  <i class="fas fa-plus me-1"></i>Add Skill
-                </button>
               </div>
             </div>
             <!-- Submit Button -->
@@ -181,15 +179,12 @@
       field.addEventListener('input', validateExperienceSection);
     });
 
-    // Skill validation
-    document.querySelectorAll('.skill-field').forEach(field => {
-      field.addEventListener('input', validateSkillSection);
-    });
+    // Initialize skills from existing form fields
+    initializeSkills();
 
     // Initial validation
     validateEducationSection();
     validateExperienceSection();
-    validateSkillSection();
   });
 
   function validateEducationSection() {
@@ -404,5 +399,80 @@
       validateExperienceSection();
       validateSkillSection();
     }, 100);
+  }
+
+  function initializeSkills() {
+    const skillFields = document.querySelectorAll('.skill-field');
+    const skillTagsContainer = document.getElementById('skill-tags');
+
+    skillFields.forEach(field => {
+      if (field.value.trim() !== '') {
+        addSkillTag(field.value.trim());
+      }
+    });
+
+    // Clear the original fields since we're using tags now
+    skillFields.forEach(field => field.value = '');
+  }
+
+  function handleSkillKeyPress(event) {
+    if (event.key === 'Enter') {
+      event.preventDefault();
+      addSkillFromInput();
+    }
+  }
+
+  function addSkillFromInput() {
+    const input = document.getElementById('skill-input');
+    const skillName = input.value.trim();
+
+    if (skillName !== '') {
+      addSkillTag(skillName);
+      input.value = '';
+    }
+  }
+
+  function addSkillTag(skillName) {
+    const skillTagsContainer = document.getElementById('skill-tags');
+
+    const tagHtml = `
+      <span class="badge bg-primary me-2 mb-2 p-2" style="font-size: 0.9rem;">
+        ${skillName}
+        <button type="button" class="btn btn-sm btn-outline-light ms-2" onclick="removeSkillTag(this, '${skillName}')" style="padding: 0 4px; font-size: 0.8rem;">
+          <i class="fas fa-times"></i>
+        </button>
+      </span>
+    `;
+
+    skillTagsContainer.insertAdjacentHTML('beforeend', tagHtml);
+
+    // Add hidden form field for Rails
+    addHiddenSkillField(skillName);
+
+    skillIndex++;
+  }
+
+  function removeSkillTag(button, skillName) {
+    button.closest('.badge').remove();
+    removeHiddenSkillField(skillName);
+  }
+
+  function addHiddenSkillField(skillName) {
+    const skillFieldsContainer = document.getElementById('skill-fields');
+    const fieldHtml = `
+      <div class="skill-entry">
+        <input type="text" name="resume[skills_attributes][${skillIndex}][name]" class="form-control skill-field" value="${skillName}" style="display: none;">
+      </div>
+    `;
+    skillFieldsContainer.insertAdjacentHTML('beforeend', fieldHtml);
+  }
+
+  function removeHiddenSkillField(skillName) {
+    const skillFields = document.querySelectorAll('.skill-field');
+    skillFields.forEach(field => {
+      if (field.value === skillName) {
+        field.closest('.skill-entry').remove();
+      }
+    });
   }
 </script>
