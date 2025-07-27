@@ -32,88 +32,127 @@
             <!-- Education Section -->
             <div class="mb-4">
               <h4 class="text-primary mb-3"><i class="fas fa-graduation-cap me-2"></i>Education</h4>
-              <%= f.fields_for :educations do |ed| %>
-                <div class="card mb-3">
-                  <div class="card-body">
-                    <div class="row">
-                      <div class="col-md-6 mb-3">
-                        <%= ed.label :school_name, "School/University", class: "form-label fw-bold" %>
-                        <%= ed.text_field :school_name, class: "form-control", placeholder: "University of Tokyo" %>
+              <div id="education-fields">
+                <%= f.fields_for :educations do |ed| %>
+                  <div class="education-entry card mb-3">
+                    <div class="card-body">
+                      <div class="d-flex justify-content-between align-items-start mb-3">
+                        <h6 class="text-muted mb-0">Education Entry</h6>
+                        <button type="button" class="btn btn-outline-danger btn-sm" onclick="removeField(this)">
+                          <i class="fas fa-trash"></i>
+                        </button>
                       </div>
-                      <div class="col-md-6 mb-3">
-                        <%= ed.label :degree, "Degree", class: "form-label fw-bold" %>
-                        <%= ed.text_field :degree, class: "form-control", placeholder: "Bachelor of Science" %>
+                      <div class="row">
+                        <div class="col-md-6 mb-3">
+                          <%= ed.label :school_name, "School/University", class: "form-label fw-bold" %>
+                          <%= ed.text_field :school_name, class: "form-control education-field", placeholder: "University of Tokyo" %>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                          <%= ed.label :degree, "Degree", class: "form-label fw-bold" %>
+                          <%= ed.text_field :degree, class: "form-control education-field", placeholder: "Bachelor of Science" %>
+                        </div>
                       </div>
-                    </div>
-                    <div class="row">
-                      <div class="col-md-4 mb-3">
-                        <%= ed.label :field, "Field of Study", class: "form-label fw-bold" %>
-                        <%= ed.text_field :field, class: "form-control", placeholder: "Computer Science" %>
+                      <div class="row">
+                        <div class="col-md-4 mb-3">
+                          <%= ed.label :field, "Field of Study", class: "form-label fw-bold" %>
+                          <%= ed.text_field :field, class: "form-control education-field", placeholder: "Computer Science" %>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                          <%= ed.label :start_date, "Start Date", class: "form-label fw-bold" %>
+                          <%= ed.date_field :start_date, class: "form-control education-field" %>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                          <%= ed.label :end_date, "End Date", class: "form-label fw-bold" %>
+                          <%= ed.date_field :end_date, class: "form-control education-field" %>
+                        </div>
                       </div>
-                      <div class="col-md-4 mb-3">
-                        <%= ed.label :start_date, "Start Date", class: "form-label fw-bold" %>
-                        <%= ed.date_field :start_date, class: "form-control" %>
+                      <div class="mb-3">
+                        <%= ed.label :description, "Description", class: "form-label fw-bold" %>
+                        <%= ed.text_area :description, class: "form-control education-field", rows: 3, placeholder: "Relevant coursework, achievements, or activities..." %>
                       </div>
-                      <div class="col-md-4 mb-3">
-                        <%= ed.label :end_date, "End Date", class: "form-label fw-bold" %>
-                        <%= ed.date_field :end_date, class: "form-control" %>
-                      </div>
-                    </div>
-                    <div class="mb-3">
-                      <%= ed.label :description, "Description", class: "form-label fw-bold" %>
-                      <%= ed.text_area :description, class: "form-control", rows: 3, placeholder: "Relevant coursework, achievements, or activities..." %>
                     </div>
                   </div>
-                </div>
-              <% end %>
+                <% end %>
+              </div>
+              <div class="text-center mt-3">
+                <button type="button" class="btn btn-outline-primary" id="add-education-btn" onclick="addEducation()" disabled>
+                  <i class="fas fa-plus me-1"></i>Add Education
+                </button>
+              </div>
             </div>
             <!-- Experience Section -->
             <div class="mb-4">
               <h4 class="text-primary mb-3"><i class="fas fa-briefcase me-2"></i>Work Experience</h4>
-              <%= f.fields_for :experiences do |exp| %>
-                <div class="card mb-3">
-                  <div class="card-body">
-                    <div class="row">
-                      <div class="col-md-6 mb-3">
-                        <%= exp.label :company_name, "Company Name", class: "form-label fw-bold" %>
-                        <%= exp.text_field :company_name, class: "form-control", placeholder: "Sony Corporation" %>
+              <div id="experience-fields">
+                <%= f.fields_for :experiences do |exp| %>
+                  <div class="experience-entry card mb-3">
+                    <div class="card-body">
+                      <div class="d-flex justify-content-between align-items-start mb-3">
+                        <h6 class="text-muted mb-0">Work Experience Entry</h6>
+                        <button type="button" class="btn btn-outline-danger btn-sm" onclick="removeField(this)">
+                          <i class="fas fa-trash"></i>
+                        </button>
                       </div>
-                      <div class="col-md-6 mb-3">
-                        <%= exp.label :title, "Job Title", class: "form-label fw-bold" %>
-                        <%= exp.text_field :title, class: "form-control", placeholder: "Software Engineer" %>
+                      <div class="row">
+                        <div class="col-md-6 mb-3">
+                          <%= exp.label :company_name, "Company Name", class: "form-label fw-bold" %>
+                          <%= exp.text_field :company_name, class: "form-control experience-field", placeholder: "Sony Corporation" %>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                          <%= exp.label :title, "Job Title", class: "form-label fw-bold" %>
+                          <%= exp.text_field :title, class: "form-control experience-field", placeholder: "Software Engineer" %>
+                        </div>
                       </div>
-                    </div>
-                    <div class="row">
-                      <div class="col-md-6 mb-3">
-                        <%= exp.label :start_date, "Start Date", class: "form-label fw-bold" %>
-                        <%= exp.date_field :start_date, class: "form-control" %>
+                      <div class="row">
+                        <div class="col-md-6 mb-3">
+                          <%= exp.label :start_date, "Start Date", class: "form-label fw-bold" %>
+                          <%= exp.date_field :start_date, class: "form-control experience-field" %>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                          <%= exp.label :end_date, "End Date", class: "form-label fw-bold" %>
+                          <%= exp.date_field :end_date, class: "form-control experience-field" %>
+                        </div>
                       </div>
-                      <div class="col-md-6 mb-3">
-                        <%= exp.label :end_date, "End Date", class: "form-label fw-bold" %>
-                        <%= exp.date_field :end_date, class: "form-control" %>
+                      <div class="mb-3">
+                        <%= exp.label :description, "Job Description", class: "form-label fw-bold" %>
+                        <%= exp.text_area :description, class: "form-control experience-field", rows: 4, placeholder: "Describe your responsibilities, achievements, and key projects..." %>
                       </div>
-                    </div>
-                    <div class="mb-3">
-                      <%= exp.label :description, "Job Description", class: "form-label fw-bold" %>
-                      <%= exp.text_area :description, class: "form-control", rows: 4, placeholder: "Describe your responsibilities, achievements, and key projects..." %>
                     </div>
                   </div>
-                </div>
-              <% end %>
+                <% end %>
+              </div>
+              <div class="text-center mt-3">
+                <button type="button" class="btn btn-outline-primary" id="add-experience-btn" onclick="addExperience()" disabled>
+                  <i class="fas fa-plus me-1"></i>Add Experience
+                </button>
+              </div>
             </div>
             <!-- Skills Section -->
             <div class="mb-4">
               <h4 class="text-primary mb-3"><i class="fas fa-tools me-2"></i>Skills</h4>
-              <%= f.fields_for :skills do |skill| %>
-                <div class="card mb-3">
-                  <div class="card-body">
-                    <div class="mb-3">
-                      <%= skill.label :name, "Skill Name", class: "form-label fw-bold" %>
-                      <%= skill.text_field :name, class: "form-control", placeholder: "e.g., JavaScript, Project Management, Japanese (N1)" %>
+              <div id="skill-fields">
+                <%= f.fields_for :skills do |skill| %>
+                  <div class="skill-entry card mb-3">
+                    <div class="card-body">
+                      <div class="d-flex justify-content-between align-items-start mb-3">
+                        <h6 class="text-muted mb-0">Skill Entry</h6>
+                        <button type="button" class="btn btn-outline-danger btn-sm" onclick="removeField(this)">
+                          <i class="fas fa-trash"></i>
+                        </button>
+                      </div>
+                      <div class="mb-3">
+                        <%= skill.label :name, "Skill Name", class: "form-label fw-bold" %>
+                        <%= skill.text_field :name, class: "form-control skill-field", placeholder: "e.g., JavaScript, Project Management, Japanese (N1)" %>
+                      </div>
                     </div>
                   </div>
-                </div>
-              <% end %>
+                <% end %>
+              </div>
+              <div class="text-center mt-3">
+                <button type="button" class="btn btn-outline-primary" id="add-skill-btn" onclick="addSkill()" disabled>
+                  <i class="fas fa-plus me-1"></i>Add Skill
+                </button>
+              </div>
             </div>
             <!-- Submit Button -->
             <div class="text-center">
@@ -125,3 +164,245 @@
     </div>
   </div>
 </div>
+<script>
+  let educationIndex = <%= @resume.educations.size %>;
+  let experienceIndex = <%= @resume.experiences.size %>;
+  let skillIndex = <%= @resume.skills.size %>;
+
+  // Add event listeners for validation
+  document.addEventListener('DOMContentLoaded', function() {
+    // Education validation
+    document.querySelectorAll('.education-field').forEach(field => {
+      field.addEventListener('input', validateEducationSection);
+    });
+
+    // Experience validation
+    document.querySelectorAll('.experience-field').forEach(field => {
+      field.addEventListener('input', validateExperienceSection);
+    });
+
+    // Skill validation
+    document.querySelectorAll('.skill-field').forEach(field => {
+      field.addEventListener('input', validateSkillSection);
+    });
+
+    // Initial validation
+    validateEducationSection();
+    validateExperienceSection();
+    validateSkillSection();
+  });
+
+  function validateEducationSection() {
+    const educationEntries = document.querySelectorAll('.education-entry');
+    const addBtn = document.getElementById('add-education-btn');
+    const deleteBtns = document.querySelectorAll('.education-entry .btn-outline-danger');
+
+    if (educationEntries.length === 0) {
+      addBtn.disabled = true;
+      return;
+    }
+
+    const lastEntry = educationEntries[educationEntries.length - 1];
+    const fields = lastEntry.querySelectorAll('.education-field');
+    const allFilled = Array.from(fields).every(field => field.value.trim() !== '');
+
+    addBtn.disabled = !allFilled;
+
+    // Show/hide delete buttons based on number of entries
+    deleteBtns.forEach(btn => {
+      btn.style.display = educationEntries.length > 1 ? 'block' : 'none';
+    });
+  }
+
+  function validateExperienceSection() {
+    const experienceEntries = document.querySelectorAll('.experience-entry');
+    const addBtn = document.getElementById('add-experience-btn');
+    const deleteBtns = document.querySelectorAll('.experience-entry .btn-outline-danger');
+
+    if (experienceEntries.length === 0) {
+      addBtn.disabled = true;
+      return;
+    }
+
+    const lastEntry = experienceEntries[experienceEntries.length - 1];
+    const fields = lastEntry.querySelectorAll('.experience-field');
+    const allFilled = Array.from(fields).every(field => field.value.trim() !== '');
+
+    addBtn.disabled = !allFilled;
+
+    // Show/hide delete buttons based on number of entries
+    deleteBtns.forEach(btn => {
+      btn.style.display = experienceEntries.length > 1 ? 'block' : 'none';
+    });
+  }
+
+  function validateSkillSection() {
+    const skillEntries = document.querySelectorAll('.skill-entry');
+    const addBtn = document.getElementById('add-skill-btn');
+    const deleteBtns = document.querySelectorAll('.skill-entry .btn-outline-danger');
+
+    if (skillEntries.length === 0) {
+      addBtn.disabled = true;
+      return;
+    }
+
+    const lastEntry = skillEntries[skillEntries.length - 1];
+    const fields = lastEntry.querySelectorAll('.skill-field');
+    const allFilled = Array.from(fields).every(field => field.value.trim() !== '');
+
+    addBtn.disabled = !allFilled;
+
+    // Show/hide delete buttons based on number of entries
+    deleteBtns.forEach(btn => {
+      btn.style.display = skillEntries.length > 1 ? 'block' : 'none';
+    });
+  }
+
+  function addEducation() {
+    const container = document.getElementById('education-fields');
+    const template = `
+      <div class="education-entry card mb-3">
+        <div class="card-body">
+          <div class="d-flex justify-content-between align-items-start mb-3">
+            <h6 class="text-muted mb-0">Education Entry</h6>
+            <button type="button" class="btn btn-outline-danger btn-sm" onclick="removeField(this)">
+              <i class="fas fa-trash"></i>
+            </button>
+          </div>
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label class="form-label fw-bold">School/University</label>
+              <input type="text" name="resume[educations_attributes][${educationIndex}][school_name]" class="form-control education-field" placeholder="University of Tokyo">
+            </div>
+            <div class="col-md-6 mb-3">
+              <label class="form-label fw-bold">Degree</label>
+              <input type="text" name="resume[educations_attributes][${educationIndex}][degree]" class="form-control education-field" placeholder="Bachelor of Science">
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-4 mb-3">
+              <label class="form-label fw-bold">Field of Study</label>
+              <input type="text" name="resume[educations_attributes][${educationIndex}][field]" class="form-control education-field" placeholder="Computer Science">
+            </div>
+            <div class="col-md-4 mb-3">
+              <label class="form-label fw-bold">Start Date</label>
+              <input type="date" name="resume[educations_attributes][${educationIndex}][start_date]" class="form-control education-field">
+            </div>
+            <div class="col-md-4 mb-3">
+              <label class="form-label fw-bold">End Date</label>
+              <input type="date" name="resume[educations_attributes][${educationIndex}][end_date]" class="form-control education-field">
+            </div>
+          </div>
+          <div class="mb-3">
+            <label class="form-label fw-bold">Description</label>
+            <textarea name="resume[educations_attributes][${educationIndex}][description]" class="form-control education-field" rows="3" placeholder="Relevant coursework, achievements, or activities..."></textarea>
+          </div>
+        </div>
+      </div>
+    `;
+    container.insertAdjacentHTML('beforeend', template);
+    educationIndex++;
+
+    // Add event listeners to new fields
+    const newEntry = container.lastElementChild;
+    newEntry.querySelectorAll('.education-field').forEach(field => {
+      field.addEventListener('input', validateEducationSection);
+    });
+
+    // Disable button after adding
+    document.getElementById('add-education-btn').disabled = true;
+  }
+
+  function addExperience() {
+    const container = document.getElementById('experience-fields');
+    const template = `
+      <div class="experience-entry card mb-3">
+        <div class="card-body">
+          <div class="d-flex justify-content-between align-items-start mb-3">
+            <h6 class="text-muted mb-0">Work Experience Entry</h6>
+            <button type="button" class="btn btn-outline-danger btn-sm" onclick="removeField(this)">
+              <i class="fas fa-trash"></i>
+            </button>
+          </div>
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label class="form-label fw-bold">Company Name</label>
+              <input type="text" name="resume[experiences_attributes][${experienceIndex}][company_name]" class="form-control experience-field" placeholder="Sony Corporation">
+            </div>
+            <div class="col-md-6 mb-3">
+              <label class="form-label fw-bold">Job Title</label>
+              <input type="text" name="resume[experiences_attributes][${experienceIndex}][title]" class="form-control experience-field" placeholder="Software Engineer">
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label class="form-label fw-bold">Start Date</label>
+              <input type="date" name="resume[experiences_attributes][${experienceIndex}][start_date]" class="form-control experience-field">
+            </div>
+            <div class="col-md-6 mb-3">
+              <label class="form-label fw-bold">End Date</label>
+              <input type="date" name="resume[experiences_attributes][${experienceIndex}][end_date]" class="form-control experience-field">
+            </div>
+          </div>
+          <div class="mb-3">
+            <label class="form-label fw-bold">Job Description</label>
+            <textarea name="resume[experiences_attributes][${experienceIndex}][description]" class="form-control experience-field" rows="4" placeholder="Describe your responsibilities, achievements, and key projects..."></textarea>
+          </div>
+        </div>
+      </div>
+    `;
+    container.insertAdjacentHTML('beforeend', template);
+    experienceIndex++;
+
+    // Add event listeners to new fields
+    const newEntry = container.lastElementChild;
+    newEntry.querySelectorAll('.experience-field').forEach(field => {
+      field.addEventListener('input', validateExperienceSection);
+    });
+
+    // Disable button after adding
+    document.getElementById('add-experience-btn').disabled = true;
+  }
+
+  function addSkill() {
+    const container = document.getElementById('skill-fields');
+    const template = `
+      <div class="skill-entry card mb-3">
+        <div class="card-body">
+          <div class="d-flex justify-content-between align-items-start mb-3">
+            <h6 class="text-muted mb-0">Skill Entry</h6>
+            <button type="button" class="btn btn-outline-danger btn-sm" onclick="removeField(this)">
+              <i class="fas fa-trash"></i>
+            </button>
+          </div>
+          <div class="mb-3">
+            <label class="form-label fw-bold">Skill Name</label>
+            <input type="text" name="resume[skills_attributes][${skillIndex}][name]" class="form-control skill-field" placeholder="e.g., JavaScript, Project Management, Japanese (N1)">
+          </div>
+        </div>
+      </div>
+    `;
+    container.insertAdjacentHTML('beforeend', template);
+    skillIndex++;
+
+    // Add event listeners to new fields
+    const newEntry = container.lastElementChild;
+    newEntry.querySelectorAll('.skill-field').forEach(field => {
+      field.addEventListener('input', validateSkillSection);
+    });
+
+    // Disable button after adding
+    document.getElementById('add-skill-btn').disabled = true;
+  }
+
+  function removeField(button) {
+    button.closest('.education-entry, .experience-entry, .skill-entry').remove();
+
+    // Re-validate sections after removal
+    setTimeout(() => {
+      validateEducationSection();
+      validateExperienceSection();
+      validateSkillSection();
+    }, 100);
+  }
+</script>
