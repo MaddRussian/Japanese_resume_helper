@@ -32,8 +32,13 @@
             <!-- Education Section -->
             <div class="mb-4">
               <h4 class="text-primary mb-3"><i class="fas fa-graduation-cap me-2"></i>Education</h4>
-              <div id="education-fields">
-                <%= f.fields_for :educations do |ed| %>
+              <!-- Display existing educations in read-only format -->
+              <div id="education-display" class="mb-4" style="display: none;">
+                <!-- Existing educations will be displayed here -->
+              </div>
+              <!-- Original form fields (shown initially) -->
+              <div id="education-original-form">
+                <%= f.fields_for :educations do |edu| %>
                   <div class="education-entry card mb-3">
                     <div class="card-body">
                       <div class="d-flex justify-content-between align-items-start mb-3">
@@ -44,40 +49,87 @@
                       </div>
                       <div class="row">
                         <div class="col-md-6 mb-3">
-                          <%= ed.label :school_name, "School/University", class: "form-label fw-bold" %>
-                          <%= ed.text_field :school_name, class: "form-control education-field", placeholder: "University of Tokyo" %>
+                          <%= edu.label :school_name, "School Name", class: "form-label fw-bold" %>
+                          <%= edu.text_field :school_name, class: "form-control education-field", placeholder: "University of Tokyo" %>
                         </div>
                         <div class="col-md-6 mb-3">
-                          <%= ed.label :degree, "Degree", class: "form-label fw-bold" %>
-                          <%= ed.text_field :degree, class: "form-control education-field", placeholder: "Bachelor of Science" %>
+                          <%= edu.label :degree, "Degree", class: "form-label fw-bold" %>
+                          <%= edu.text_field :degree, class: "form-control education-field", placeholder: "Bachelor of Science" %>
                         </div>
                       </div>
                       <div class="row">
-                        <div class="col-md-4 mb-3">
-                          <%= ed.label :field, "Field of Study", class: "form-label fw-bold" %>
-                          <%= ed.text_field :field, class: "form-control education-field", placeholder: "Computer Science" %>
+                        <div class="col-md-6 mb-3">
+                          <%= edu.label :field, "Field of Study", class: "form-label fw-bold" %>
+                          <%= edu.text_field :field, class: "form-control education-field", placeholder: "Computer Science" %>
                         </div>
-                        <div class="col-md-4 mb-3">
-                          <%= ed.label :start_date, "Start Date", class: "form-label fw-bold" %>
-                          <%= ed.date_field :start_date, class: "form-control education-field" %>
+                        <div class="col-md-6 mb-3">
+                          <%= edu.label :start_date, "Start Date", class: "form-label fw-bold" %>
+                          <%= edu.date_field :start_date, class: "form-control education-field" %>
                         </div>
-                        <div class="col-md-4 mb-3">
-                          <%= ed.label :end_date, "End Date", class: "form-label fw-bold" %>
-                          <%= ed.date_field :end_date, class: "form-control education-field" %>
+                      </div>
+                      <div class="row">
+                        <div class="col-md-6 mb-3">
+                          <%= edu.label :end_date, "End Date", class: "form-label fw-bold" %>
+                          <%= edu.date_field :end_date, class: "form-control education-field" %>
                         </div>
                       </div>
                       <div class="mb-3">
-                        <%= ed.label :description, "Description", class: "form-label fw-bold" %>
-                        <%= ed.text_area :description, class: "form-control education-field", rows: 3, placeholder: "Relevant coursework, achievements, or activities..." %>
+                        <%= edu.label :description, "Description", class: "form-label fw-bold" %>
+                        <%= edu.text_area :description, class: "form-control education-field", rows: 3, placeholder: "Relevant coursework, achievements, GPA..." %>
                       </div>
                     </div>
                   </div>
                 <% end %>
+                <div class="text-center mt-3">
+                  <button type="button" class="btn btn-outline-primary" id="add-education-btn" onclick="addEducation()" disabled>
+                    <i class="fas fa-plus me-1"></i>Add Education
+                  </button>
+                </div>
               </div>
-              <div class="text-center mt-3">
-                <button type="button" class="btn btn-outline-primary" id="add-education-btn" onclick="addEducation()" disabled>
-                  <i class="fas fa-plus me-1"></i>Add Education
-                </button>
+              <!-- Form for adding new education (shown after first education) -->
+              <div id="education-form" style="display: none;">
+                <div class="education-entry card mb-3">
+                  <div class="card-body">
+                    <div class="mb-3">
+                      <h6 class="text-muted mb-0">Education Entry</h6>
+                    </div>
+                    <div class="row">
+                      <div class="col-md-6 mb-3">
+                        <label class="form-label fw-bold">School Name</label>
+                        <input type="text" id="new-school" class="form-control education-field" placeholder="University of Tokyo">
+                      </div>
+                      <div class="col-md-6 mb-3">
+                        <label class="form-label fw-bold">Degree</label>
+                        <input type="text" id="new-degree" class="form-control education-field" placeholder="Bachelor of Science">
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-md-6 mb-3">
+                        <label class="form-label fw-bold">Field of Study</label>
+                        <input type="text" id="new-field" class="form-control education-field" placeholder="Computer Science">
+                      </div>
+                      <div class="col-md-6 mb-3">
+                        <label class="form-label fw-bold">Start Date</label>
+                        <input type="date" id="new-edu-start-date" class="form-control education-field">
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-md-6 mb-3">
+                        <label class="form-label fw-bold">End Date</label>
+                        <input type="date" id="new-edu-end-date" class="form-control education-field">
+                      </div>
+                    </div>
+                    <div class="mb-3">
+                      <label class="form-label fw-bold">Description</label>
+                      <textarea id="new-edu-description" class="form-control education-field" rows: 3 placeholder="Relevant coursework, achievements, GPA..."></textarea>
+                    </div>
+                  </div>
+                </div>
+                <div class="text-center mt-3">
+                  <button type="button" class="btn btn-outline-primary" id="add-education-btn-new" onclick="addEducationFromForm()" disabled>
+                    <i class="fas fa-plus me-1"></i>Add Education
+                  </button>
+                </div>
               </div>
             </div>
             <!-- Experience Section -->
@@ -229,6 +281,9 @@
     // Initialize experience display
     initializeExperienceDisplay();
 
+    // Initialize education display
+    initializeEducationDisplay();
+
     // Initial validation
     validateEducationSection();
     validateExperienceSection();
@@ -364,9 +419,9 @@
   }
 
   function validateEducationSection() {
-    const educationEntries = document.querySelectorAll('.education-entry');
+    const educationEntries = document.querySelectorAll('#education-original-form .education-entry');
     const addBtn = document.getElementById('add-education-btn');
-    const deleteBtns = document.querySelectorAll('.education-entry .btn-outline-danger');
+    const deleteBtns = document.querySelectorAll('#education-original-form .education-entry .btn-outline-danger');
 
     if (educationEntries.length === 0) {
       addBtn.disabled = true;
@@ -430,7 +485,38 @@
   }
 
   function addEducation() {
-    const container = document.getElementById('education-fields');
+    const educationEntries = document.querySelectorAll('#education-original-form .education-entry');
+
+    // If this is the first education, handle the transition to display mode
+    if (educationEntries.length === 1) {
+      const lastEntry = educationEntries[0];
+      const fields = lastEntry.querySelectorAll('.education-field');
+
+      // Get the data from the completed education
+      const school = fields[0].value.trim();
+      const degree = fields[1].value.trim();
+      const field = fields[2].value.trim();
+      const startDate = fields[3].value;
+      const endDate = fields[4].value;
+      const description = fields[5].value.trim();
+
+      // Switch to display mode
+      switchToEducationDisplayMode();
+
+      // Add the completed education to display
+      addEducationDisplay(school, degree, field, startDate, endDate, description, 0);
+
+      // Add hidden form field
+      addHiddenEducationField(school, degree, field, startDate, endDate, description);
+
+      // Clear the original form
+      lastEntry.remove();
+
+      return;
+    }
+
+    // For additional educations, add new form fields as before
+    const container = document.getElementById('education-original-form');
     const template = `
       <div class="education-entry card mb-3">
         <div class="card-body">
@@ -442,7 +528,7 @@
           </div>
           <div class="row">
             <div class="col-md-6 mb-3">
-              <label class="form-label fw-bold">School/University</label>
+              <label class="form-label fw-bold">School Name</label>
               <input type="text" name="resume[educations_attributes][${educationIndex}][school_name]" class="form-control education-field" placeholder="University of Tokyo">
             </div>
             <div class="col-md-6 mb-3">
@@ -451,22 +537,24 @@
             </div>
           </div>
           <div class="row">
-            <div class="col-md-4 mb-3">
+            <div class="col-md-6 mb-3">
               <label class="form-label fw-bold">Field of Study</label>
               <input type="text" name="resume[educations_attributes][${educationIndex}][field]" class="form-control education-field" placeholder="Computer Science">
             </div>
-            <div class="col-md-4 mb-3">
+            <div class="col-md-6 mb-3">
               <label class="form-label fw-bold">Start Date</label>
               <input type="date" name="resume[educations_attributes][${educationIndex}][start_date]" class="form-control education-field">
             </div>
-            <div class="col-md-4 mb-3">
+          </div>
+          <div class="row">
+            <div class="col-md-6 mb-3">
               <label class="form-label fw-bold">End Date</label>
               <input type="date" name="resume[educations_attributes][${educationIndex}][end_date]" class="form-control education-field">
             </div>
           </div>
           <div class="mb-3">
             <label class="form-label fw-bold">Description</label>
-            <textarea name="resume[educations_attributes][${educationIndex}][description]" class="form-control education-field" rows="3" placeholder="Relevant coursework, achievements, or activities..."></textarea>
+            <textarea name="resume[educations_attributes][${educationIndex}][description]" class="form-control education-field" rows: 3 placeholder="Relevant coursework, achievements, GPA..."></textarea>
           </div>
         </div>
       </div>
@@ -707,5 +795,159 @@
         field.closest('.skill-entry').remove();
       }
     });
+  }
+
+  function initializeEducationDisplay() {
+    const educationFields = document.querySelectorAll('#education-original-form .education-entry');
+
+    if (educationFields.length > 0) {
+      // Check if any education has data
+      let hasData = false;
+      educationFields.forEach(entry => {
+        const fields = entry.querySelectorAll('input, textarea');
+        fields.forEach(field => {
+          if (field.value.trim() !== '') {
+            hasData = true;
+          }
+        });
+      });
+
+      if (hasData) {
+        // Switch to display mode if there's existing data
+        switchToEducationDisplayMode();
+
+        // Convert existing form data to display format
+        educationFields.forEach((entry, index) => {
+          const fields = entry.querySelectorAll('input, textarea');
+          if (fields.length >= 6) {
+            const school = fields[0].value;
+            const degree = fields[1].value;
+            const field = fields[2].value;
+            const startDate = fields[3].value;
+            const endDate = fields[4].value;
+            const description = fields[5].value;
+
+            if (school || degree || field || startDate || endDate || description) {
+              addEducationDisplay(school, degree, field, startDate, endDate, description, index);
+            }
+          }
+        });
+      }
+    }
+  }
+
+  function validateEducationForm() {
+    const school = document.getElementById('new-school').value.trim();
+    const degree = document.getElementById('new-degree').value.trim();
+    const field = document.getElementById('new-field').value.trim();
+    const startDate = document.getElementById('new-edu-start-date').value;
+    const endDate = document.getElementById('new-edu-end-date').value;
+    const description = document.getElementById('new-edu-description').value.trim();
+
+    const addBtn = document.getElementById('add-education-btn-new');
+    const allFilled = school && degree && field && startDate && endDate && description;
+
+    addBtn.disabled = !allFilled;
+  }
+
+  function switchToEducationDisplayMode() {
+    // Hide original form
+    document.getElementById('education-original-form').style.display = 'none';
+
+    // Show display and new form
+    document.getElementById('education-display').style.display = 'block';
+    document.getElementById('education-form').style.display = 'block';
+
+    // Add event listeners to new form fields
+    document.querySelectorAll('#education-form .education-field').forEach(field => {
+      field.addEventListener('input', validateEducationForm);
+    });
+  }
+
+  function addEducationDisplay(school, degree, field, startDate, endDate, description, index) {
+    const displayContainer = document.getElementById('education-display');
+    const displayHtml = `
+      <div class="card mb-3 education-display-entry" data-index="${index}">
+        <div class="card-body">
+          <div class="d-flex justify-content-between align-items-start mb-2">
+            <div>
+              <h6 class="mb-1 fw-bold text-primary">${degree || 'Degree'}</h6>
+              <p class="mb-1 text-muted">${school || 'School Name'}</p>
+            </div>
+            <button type="button" class="btn btn-outline-danger btn-sm" onclick="removeEducationDisplay(${index})">
+              <i class="fas fa-trash"></i>
+            </button>
+          </div>
+          <div class="row mb-2">
+            <div class="col-md-6">
+              <small class="text-muted">
+                <i class="fas fa-graduation-cap me-1"></i>
+                ${field || 'Field of Study'}
+              </small>
+            </div>
+            <div class="col-md-6">
+              <small class="text-muted">
+                <i class="fas fa-calendar me-1"></i>
+                ${startDate ? new Date(startDate).toLocaleDateString() : 'Start Date'} - ${endDate ? new Date(endDate).toLocaleDateString() : 'End Date'}
+              </small>
+            </div>
+          </div>
+          ${description ? `<p class="mb-0 small">${description}</p>` : ''}
+        </div>
+      </div>
+    `;
+    displayContainer.insertAdjacentHTML('beforeend', displayHtml);
+  }
+
+  function addEducationFromForm() {
+    const school = document.getElementById('new-school').value.trim();
+    const degree = document.getElementById('new-degree').value.trim();
+    const field = document.getElementById('new-field').value.trim();
+    const startDate = document.getElementById('new-edu-start-date').value;
+    const endDate = document.getElementById('new-edu-end-date').value;
+    const description = document.getElementById('new-edu-description').value.trim();
+
+    if (school && degree && field && startDate && endDate && description) {
+      addEducationDisplay(school, degree, field, startDate, endDate, description, educationIndex);
+      addHiddenEducationField(school, degree, field, startDate, endDate, description);
+      clearEducationForm();
+      document.getElementById('add-education-btn-new').disabled = true;
+      educationIndex++;
+    }
+  }
+
+  function addHiddenEducationField(school, degree, field, startDate, endDate, description) {
+    const educationFieldsContainer = document.getElementById('education-original-form');
+    const fieldHtml = `
+      <div class="education-entry">
+        <input type="text" name="resume[educations_attributes][${educationIndex}][school_name]" value="${school}" style="display: none;">
+        <input type="text" name="resume[educations_attributes][${educationIndex}][degree]" value="${degree}" style="display: none;">
+        <input type="text" name="resume[educations_attributes][${educationIndex}][field]" value="${field}" style="display: none;">
+        <input type="date" name="resume[educations_attributes][${educationIndex}][start_date]" value="${startDate}" style="display: none;">
+        <input type="date" name="resume[educations_attributes][${educationIndex}][end_date]" value="${endDate}" style="display: none;">
+        <textarea name="resume[educations_attributes][${educationIndex}][description]" style="display: none;">${description}</textarea>
+      </div>
+    `;
+    educationFieldsContainer.insertAdjacentHTML('beforeend', fieldHtml);
+  }
+
+  function clearEducationForm() {
+    document.getElementById('new-school').value = '';
+    document.getElementById('new-degree').value = '';
+    document.getElementById('new-field').value = '';
+    document.getElementById('new-edu-start-date').value = '';
+    document.getElementById('new-edu-end-date').value = '';
+    document.getElementById('new-edu-description').value = '';
+  }
+
+  function removeEducationDisplay(index) {
+    const displayEntry = document.querySelector(`.education-display-entry[data-index="${index}"]`);
+    if (displayEntry) {
+      displayEntry.remove();
+    }
+    const educationFields = document.querySelectorAll('#education-original-form .education-entry');
+    if (educationFields[index]) {
+      educationFields[index].remove();
+    }
   }
 </script>
