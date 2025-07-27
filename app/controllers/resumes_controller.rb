@@ -10,6 +10,7 @@ class ResumesController < ApplicationController
     @resume.educations.build
     @resume.experiences.build
     @resume.skills.build
+    @resume.certifications.build
   end
 
   def create
@@ -53,7 +54,8 @@ class ResumesController < ApplicationController
       :title, :summary, :address, :phone_number,
       educations_attributes: [:id, :school_name, :institution_type, :degree, :field, :start_date, :end_date, :description, :_destroy],
       experiences_attributes: [:id, :company_name, :title, :start_date, :end_date, :description, :_destroy],
-      skills_attributes: [:id, :name, :_destroy]
+      skills_attributes: [:id, :name, :_destroy],
+      certifications_attributes: [:id, :name, :completion_date, :_destroy]
     )
   end
 end

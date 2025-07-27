@@ -12,8 +12,8 @@
               <h4 class="text-primary mb-3"><i class="fas fa-user me-2"></i>Basic Information</h4>
               <div class="row">
                 <div class="col-md-6 mb-3">
-                  <%= f.label :title, "Resume Title", class: "form-label fw-bold" %>
-                  <%= f.text_field :title, class: "form-control", placeholder: "e.g., Software Engineer Resume" %>
+                  <%= f.label :title, "Full Name", class: "form-label fw-bold" %>
+                  <%= f.text_field :title, class: "form-control", placeholder: "Your full name" %>
                 </div>
                 <div class="col-md-6 mb-3">
                   <%= f.label :phone_number, "Phone Number", class: "form-label fw-bold" %>
@@ -22,11 +22,11 @@
               </div>
               <div class="mb-3">
                 <%= f.label :address, "Address", class: "form-label fw-bold" %>
-                <%= f.text_field :address, class: "form-control", placeholder: "Tokyo, Japan" %>
+                <%= f.text_field :address, class: "form-control", placeholder: "Your full address" %>
               </div>
               <div class="mb-3">
                 <%= f.label :summary, "Professional Summary", class: "form-label fw-bold" %>
-                <%= f.text_area :summary, class: "form-control", rows: 4, placeholder: "Brief overview of your professional background and career objectives..." %>
+                <%= f.text_area :summary, class: "form-control", rows: 4, placeholder: "Brief overview of your professional background, key skills, and career objectives..." %>
               </div>
             </div>
             <!-- Education Section -->
@@ -249,25 +249,82 @@
             <div class="mb-4">
               <h4 class="text-primary mb-3"><i class="fas fa-tools me-2"></i>Skills</h4>
               <div class="mb-3">
-                <label class="form-label fw-bold">Add Skills</label>
+                <label class="form-label fw-bold">Add Skills (separate with commas)</label>
                 <div class="input-group">
-                  <input type="text" id="skill-input" class="form-control" placeholder="e.g., JavaScript, Project Management, Japanese (N1)" onkeypress="handleSkillKeyPress(event)">
+                  <input type="text" id="skill-input" class="form-control" placeholder="e.g., JavaScript, React, Project Management">
                   <button type="button" class="btn btn-outline-primary" onclick="addSkillFromInput()">
-                    <i class="fas fa-plus"></i>
+                    <i class="fas fa-plus me-1"></i>Add
                   </button>
                 </div>
-                <small class="text-muted">Press Enter or click the + button to add a skill</small>
               </div>
-              <div id="skill-tags" class="mb-3">
-                <!-- Skills will be displayed as tags here -->
+              <div id="skills-display" class="mb-3">
+                <!-- Skills will be displayed here as tags -->
               </div>
-              <!-- Hidden form fields for Rails -->
-              <div id="skill-fields" style="display: none;">
+              <div id="skills-fields" style="display: none;">
                 <%= f.fields_for :skills do |skill| %>
                   <div class="skill-entry">
                     <%= skill.text_field :name, class: "form-control skill-field" %>
                   </div>
                 <% end %>
+              </div>
+            </div>
+            <!-- Certifications Section -->
+            <div class="mb-4">
+              <h4 class="text-primary mb-3"><i class="fas fa-certificate me-2"></i>Certifications</h4>
+              <!-- Display existing certifications in read-only format -->
+              <div id="certification-display" class="mb-4" style="display: none;">
+                <!-- Existing certifications will be displayed here -->
+              </div>
+              <!-- Original form fields (shown initially) -->
+              <div id="certification-original-form">
+                <%= f.fields_for :certifications do |cert| %>
+                  <div class="certification-entry card mb-3">
+                    <div class="card-body">
+                      <div class="d-flex justify-content-between align-items-start mb-3">
+                        <button type="button" class="btn btn-outline-danger btn-sm" onclick="removeField(this)">
+                          <i class="fas fa-trash"></i>
+                        </button>
+                      </div>
+                      <div class="row">
+                        <div class="col-md-8 mb-3">
+                          <%= cert.label :name, "Certification Name", class: "form-label fw-bold" %>
+                          <%= cert.text_field :name, class: "form-control certification-field", placeholder: "e.g., AWS Certified Solutions Architect, JLPT N2" %>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                          <%= cert.label :completion_date, "Completion Date", class: "form-label fw-bold" %>
+                          <%= cert.month_field :completion_date, class: "form-control certification-field" %>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                <% end %>
+                <div class="text-center mt-3">
+                  <button type="button" class="btn btn-outline-primary" id="add-certification-btn" onclick="addCertification()" disabled>
+                    <i class="fas fa-plus me-1"></i>Add Certification
+                  </button>
+                </div>
+              </div>
+              <!-- Form for adding new certification (shown after first certification) -->
+              <div id="certification-form" style="display: none;">
+                <div class="certification-entry card mb-3">
+                  <div class="card-body">
+                    <div class="row">
+                      <div class="col-md-8 mb-3">
+                        <label class="form-label fw-bold">Certification Name</label>
+                        <input type="text" id="new-certification-name" class="form-control certification-field" placeholder="e.g., AWS Certified Solutions Architect, JLPT N2">
+                      </div>
+                      <div class="col-md-4 mb-3">
+                        <label class="form-label fw-bold">Completion Date</label>
+                        <input type="month" id="new-certification-date" class="form-control certification-field">
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="text-center mt-3">
+                  <button type="button" class="btn btn-outline-primary" id="add-certification-btn-new" onclick="addCertificationFromForm()" disabled>
+                    <i class="fas fa-plus me-1"></i>Add Certification
+                  </button>
+                </div>
               </div>
             </div>
             <!-- Submit Button -->
@@ -281,9 +338,10 @@
   </div>
 </div>
 <script>
-  let educationIndex = <%= @resume.educations.size %>;
-  let experienceIndex = <%= @resume.experiences.size %>;
-  let skillIndex = <%= @resume.skills.size %>;
+  let experienceIndex = 0;
+  let educationIndex = 0;
+  let skillIndex = 0;
+  let certificationIndex = 0;
 
   // Add event listeners for validation
   document.addEventListener('DOMContentLoaded', function() {
@@ -297,6 +355,16 @@
       field.addEventListener('input', validateExperienceSection);
     });
 
+    // Certification validation
+    document.querySelectorAll('.certification-field').forEach(field => {
+      field.addEventListener('input', validateCertificationSection);
+    });
+
+    // Skills validation
+    document.querySelectorAll('.skill-field').forEach(field => {
+      field.addEventListener('input', validateSkillSection);
+    });
+
     // Initialize skills from existing form fields
     initializeSkills();
 
@@ -306,9 +374,31 @@
     // Initialize education display
     initializeEducationDisplay();
 
+    // Initialize certification display
+    initializeCertificationDisplay();
+
     // Initial validation
-    validateEducationSection();
     validateExperienceSection();
+    validateEducationSection();
+    validateCertificationSection();
+    validateSkillSection();
+
+    // Add event listeners to existing fields
+    document.querySelectorAll('.experience-field').forEach(field => {
+      field.addEventListener('input', validateExperienceSection);
+    });
+
+    document.querySelectorAll('.education-field').forEach(field => {
+      field.addEventListener('input', validateEducationSection);
+    });
+
+    document.querySelectorAll('.certification-field').forEach(field => {
+      field.addEventListener('input', validateCertificationSection);
+    });
+
+    document.querySelectorAll('.skill-field').forEach(field => {
+      field.addEventListener('input', validateSkillSection);
+    });
   });
 
   function initializeExperienceDisplay() {
@@ -479,6 +569,28 @@
     // Show/hide delete buttons based on number of entries
     deleteBtns.forEach(btn => {
       btn.style.display = experienceEntries.length > 1 ? 'block' : 'none';
+    });
+  }
+
+  function validateCertificationSection() {
+    const certificationEntries = document.querySelectorAll('#certification-original-form .certification-entry');
+    const addBtn = document.getElementById('add-certification-btn');
+    const deleteBtns = document.querySelectorAll('#certification-original-form .certification-entry .btn-outline-danger');
+
+    if (certificationEntries.length === 0) {
+      addBtn.disabled = true;
+      return;
+    }
+
+    const lastEntry = certificationEntries[certificationEntries.length - 1];
+    const fields = lastEntry.querySelectorAll('.certification-field');
+    const allFilled = Array.from(fields).every(field => field.value.trim() !== '');
+
+    addBtn.disabled = !allFilled;
+
+    // Show/hide delete buttons based on number of entries
+    deleteBtns.forEach(btn => {
+      btn.style.display = certificationEntries.length > 1 ? 'block' : 'none';
     });
   }
 
@@ -745,12 +857,13 @@
   }
 
   function removeField(button) {
-    button.closest('.education-entry, .experience-entry, .skill-entry').remove();
+    button.closest('.education-entry, .experience-entry, .skill-entry, .certification-entry').remove();
 
     // Re-validate sections after removal
     setTimeout(() => {
       validateEducationSection();
       validateExperienceSection();
+      validateCertificationSection();
       validateSkillSection();
     }, 100);
   }
@@ -1003,6 +1116,188 @@
     if (educationFields[index]) {
       educationFields[index].remove();
     }
+  }
+
+  function initializeCertificationDisplay() {
+    const certificationFields = document.querySelectorAll('#certification-original-form .certification-entry');
+
+    if (certificationFields.length > 0) {
+      // Check if any certification has data
+      let hasData = false;
+      certificationFields.forEach(entry => {
+        const fields = entry.querySelectorAll('input, textarea');
+        fields.forEach(field => {
+          if (field.value.trim() !== '') {
+            hasData = true;
+          }
+        });
+      });
+
+      if (hasData) {
+        // Switch to display mode if there's existing data
+        switchToCertificationDisplayMode();
+
+        // Convert existing form data to display format
+        certificationFields.forEach((entry, index) => {
+          const fields = entry.querySelectorAll('input, textarea');
+          if (fields.length >= 2) {
+            const name = fields[0].value;
+            const completionDate = fields[1].value;
+
+            if (name || completionDate) {
+              addCertificationDisplay(name, completionDate, index);
+            }
+          }
+        });
+      }
+    }
+  }
+
+  function addCertificationDisplay(name, completionDate, index) {
+    const displayContainer = document.getElementById('certification-display');
+    const displayHtml = `
+      <div class="card mb-3 certification-display-entry" data-index="${index}">
+        <div class="card-body">
+          <div class="d-flex justify-content-between align-items-start mb-2">
+            <div>
+              <h6 class="mb-1 fw-bold text-primary">${name || 'Certification Name'}</h6>
+              <p class="mb-1 text-muted">${completionDate ? formatMonthYear(completionDate) : 'Completion Date'}</p>
+            </div>
+            <button type="button" class="btn btn-outline-danger btn-sm" onclick="removeCertificationDisplay(${index})">
+              <i class="fas fa-trash"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    `;
+    displayContainer.insertAdjacentHTML('beforeend', displayHtml);
+  }
+
+  function addCertification() {
+    const certificationEntries = document.querySelectorAll('#certification-original-form .certification-entry');
+
+    // If this is the first certification, handle the transition to display mode
+    if (certificationEntries.length === 1) {
+      const lastEntry = certificationEntries[0];
+      const fields = lastEntry.querySelectorAll('.certification-field');
+
+      // Get the data from the completed certification
+      const name = fields[0].value.trim();
+      const completionDate = fields[1].value;
+
+      // Switch to display mode
+      switchToCertificationDisplayMode();
+
+      // Add the completed certification to display
+      addCertificationDisplay(name, completionDate, 0);
+
+      // Add hidden form field
+      addHiddenCertificationField(name, completionDate);
+
+      // Clear the original form
+      lastEntry.remove();
+
+      return;
+    }
+
+    // For additional certifications, add new form fields as before
+    const container = document.getElementById('certification-original-form');
+    const template = `
+      <div class="certification-entry card mb-3">
+        <div class="card-body">
+          <div class="d-flex justify-content-between align-items-start mb-3">
+            <button type="button" class="btn btn-outline-danger btn-sm" onclick="removeField(this)">
+              <i class="fas fa-trash"></i>
+            </button>
+          </div>
+          <div class="row">
+            <div class="col-md-8 mb-3">
+              <label class="form-label fw-bold">Certification Name</label>
+              <input type="text" name="resume[certifications_attributes][${certificationIndex}][name]" class="form-control certification-field" placeholder="e.g., AWS Certified Solutions Architect, JLPT N2">
+            </div>
+            <div class="col-md-4 mb-3">
+              <label class="form-label fw-bold">Completion Date</label>
+              <input type="month" name="resume[certifications_attributes][${certificationIndex}][completion_date]" class="form-control certification-field">
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
+    container.insertAdjacentHTML('beforeend', template);
+    certificationIndex++;
+
+    // Add event listeners to new fields
+    const newEntry = container.lastElementChild;
+    newEntry.querySelectorAll('.certification-field').forEach(field => {
+      field.addEventListener('input', validateCertificationSection);
+    });
+
+    // Disable button after adding
+    document.getElementById('add-certification-btn').disabled = true;
+  }
+
+  function addCertificationFromForm() {
+    const name = document.getElementById('new-certification-name').value.trim();
+    const completionDate = document.getElementById('new-certification-date').value;
+
+    if (name && completionDate) {
+      addCertificationDisplay(name, completionDate, certificationIndex);
+      addHiddenCertificationField(name, completionDate);
+      clearCertificationForm();
+      document.getElementById('add-certification-btn-new').disabled = true;
+      certificationIndex++;
+    }
+  }
+
+  function addHiddenCertificationField(name, completionDate) {
+    const certificationFieldsContainer = document.getElementById('certification-original-form');
+    const fieldHtml = `
+      <div class="certification-entry">
+        <input type="text" name="resume[certifications_attributes][${certificationIndex}][name]" value="${name}" style="display: none;">
+        <input type="month" name="resume[certifications_attributes][${certificationIndex}][completion_date]" value="${completionDate}" style="display: none;">
+      </div>
+    `;
+    certificationFieldsContainer.insertAdjacentHTML('beforeend', fieldHtml);
+  }
+
+  function clearCertificationForm() {
+    document.getElementById('new-certification-name').value = '';
+    document.getElementById('new-certification-date').value = '';
+  }
+
+  function removeCertificationDisplay(index) {
+    const displayEntry = document.querySelector(`.certification-display-entry[data-index="${index}"]`);
+    if (displayEntry) {
+      displayEntry.remove();
+    }
+    const certificationFields = document.querySelectorAll('#certification-original-form .certification-entry');
+    if (certificationFields[index]) {
+      certificationFields[index].remove();
+    }
+  }
+
+  function switchToCertificationDisplayMode() {
+    // Hide original form
+    document.getElementById('certification-original-form').style.display = 'none';
+
+    // Show display and new form
+    document.getElementById('certification-display').style.display = 'block';
+    document.getElementById('certification-form').style.display = 'block';
+
+    // Add event listeners to new form fields
+    document.querySelectorAll('#certification-form .certification-field').forEach(field => {
+      field.addEventListener('input', validateCertificationForm);
+    });
+  }
+
+  function validateCertificationForm() {
+    const name = document.getElementById('new-certification-name').value.trim();
+    const completionDate = document.getElementById('new-certification-date').value;
+
+    const addBtn = document.getElementById('add-certification-btn-new');
+    const allFilled = name && completionDate;
+
+    addBtn.disabled = !allFilled;
   }
 
   function formatMonthYear(dateString) {

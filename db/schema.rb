@@ -10,9 +10,18 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_07_27_104033) do
+ActiveRecord::Schema[7.1].define(version: 2025_07_27_113500) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "certifications", force: :cascade do |t|
+    t.string "name"
+    t.date "completion_date"
+    t.bigint "resume_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["resume_id"], name: "index_certifications_on_resume_id"
+  end
 
   create_table "educations", force: :cascade do |t|
     t.bigint "resume_id", null: false
@@ -73,6 +82,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_07_27_104033) do
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
+  add_foreign_key "certifications", "resumes"
   add_foreign_key "educations", "resumes"
   add_foreign_key "experiences", "resumes"
   add_foreign_key "resumes", "users"
