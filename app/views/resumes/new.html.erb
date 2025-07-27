@@ -83,7 +83,12 @@
             <!-- Experience Section -->
             <div class="mb-4">
               <h4 class="text-primary mb-3"><i class="fas fa-briefcase me-2"></i>Work Experience</h4>
-              <div id="experience-fields">
+              <!-- Display existing experiences in read-only format -->
+              <div id="experience-display" class="mb-4" style="display: none;">
+                <!-- Existing experiences will be displayed here -->
+              </div>
+              <!-- Original form fields (shown initially) -->
+              <div id="experience-original-form">
                 <%= f.fields_for :experiences do |exp| %>
                   <div class="experience-entry card mb-3">
                     <div class="card-body">
@@ -120,11 +125,50 @@
                     </div>
                   </div>
                 <% end %>
+                <div class="text-center mt-3">
+                  <button type="button" class="btn btn-outline-primary" id="add-experience-btn" onclick="addExperience()" disabled>
+                    <i class="fas fa-plus me-1"></i>Add Experience
+                  </button>
+                </div>
               </div>
-              <div class="text-center mt-3">
-                <button type="button" class="btn btn-outline-primary" id="add-experience-btn" onclick="addExperience()" disabled>
-                  <i class="fas fa-plus me-1"></i>Add Experience
-                </button>
+              <!-- Form for adding new experience (shown after first experience) -->
+              <div id="experience-form" style="display: none;">
+                <div class="experience-entry card mb-3">
+                  <div class="card-body">
+                    <div class="mb-3">
+                      <h6 class="text-muted mb-0">Work Experience Entry</h6>
+                    </div>
+                    <div class="row">
+                      <div class="col-md-6 mb-3">
+                        <label class="form-label fw-bold">Company Name</label>
+                        <input type="text" id="new-company" class="form-control experience-field" placeholder="Sony Corporation">
+                      </div>
+                      <div class="col-md-6 mb-3">
+                        <label class="form-label fw-bold">Job Title</label>
+                        <input type="text" id="new-title" class="form-control experience-field" placeholder="Software Engineer">
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-md-6 mb-3">
+                        <label class="form-label fw-bold">Start Date</label>
+                        <input type="date" id="new-start-date" class="form-control experience-field">
+                      </div>
+                      <div class="col-md-6 mb-3">
+                        <label class="form-label fw-bold">End Date</label>
+                        <input type="date" id="new-end-date" class="form-control experience-field">
+                      </div>
+                    </div>
+                    <div class="mb-3">
+                      <label class="form-label fw-bold">Job Description</label>
+                      <textarea id="new-description" class="form-control experience-field" rows: 4 placeholder="Describe your responsibilities, achievements, and key projects..."></textarea>
+                    </div>
+                  </div>
+                </div>
+                <div class="text-center mt-3">
+                  <button type="button" class="btn btn-outline-primary" id="add-experience-btn-new" onclick="addExperienceFromForm()" disabled>
+                    <i class="fas fa-plus me-1"></i>Add Experience
+                  </button>
+                </div>
               </div>
             </div>
             <!-- Skills Section -->
@@ -182,10 +226,142 @@
     // Initialize skills from existing form fields
     initializeSkills();
 
+    // Initialize experience display
+    initializeExperienceDisplay();
+
     // Initial validation
     validateEducationSection();
     validateExperienceSection();
   });
+
+  function initializeExperienceDisplay() {
+    const experienceFields = document.querySelectorAll('#experience-original-form .experience-entry');
+
+    if (experienceFields.length > 0) {
+      // Check if any experience has data
+      let hasData = false;
+      experienceFields.forEach(entry => {
+        const fields = entry.querySelectorAll('input, textarea');
+        fields.forEach(field => {
+          if (field.value.trim() !== '') {
+            hasData = true;
+          }
+        });
+      });
+
+      if (hasData) {
+        // Switch to display mode if there's existing data
+        switchToDisplayMode();
+
+        // Convert existing form data to display format
+        experienceFields.forEach((entry, index) => {
+          const fields = entry.querySelectorAll('input, textarea');
+          if (fields.length >= 5) {
+            const company = fields[0].value;
+            const title = fields[1].value;
+            const startDate = fields[2].value;
+            const endDate = fields[3].value;
+            const description = fields[4].value;
+
+            if (company || title || startDate || endDate || description) {
+              addExperienceDisplay(company, title, startDate, endDate, description, index);
+            }
+          }
+        });
+      }
+    }
+  }
+
+  function addExperienceDisplay(company, title, startDate, endDate, description, index) {
+    const displayContainer = document.getElementById('experience-display');
+
+    const displayHtml = `
+      <div class="card mb-3 experience-display-entry" data-index="${index}">
+        <div class="card-body">
+          <div class="d-flex justify-content-between align-items-start mb-2">
+            <div>
+              <h6 class="mb-1 fw-bold text-primary">${title || 'Job Title'}</h6>
+              <p class="mb-1 text-muted">${company || 'Company Name'}</p>
+            </div>
+            <button type="button" class="btn btn-outline-danger btn-sm" onclick="removeExperienceDisplay(${index})">
+              <i class="fas fa-trash"></i>
+            </button>
+          </div>
+          <div class="row mb-2">
+            <div class="col-md-6">
+              <small class="text-muted">
+                <i class="fas fa-calendar me-1"></i>
+                ${startDate ? new Date(startDate).toLocaleDateString() : 'Start Date'} - ${endDate ? new Date(endDate).toLocaleDateString() : 'End Date'}
+              </small>
+            </div>
+          </div>
+          ${description ? `<p class="mb-0 small">${description}</p>` : ''}
+        </div>
+      </div>
+    `;
+
+    displayContainer.insertAdjacentHTML('beforeend', displayHtml);
+  }
+
+  function addExperienceFromForm() {
+    const company = document.getElementById('new-company').value.trim();
+    const title = document.getElementById('new-title').value.trim();
+    const startDate = document.getElementById('new-start-date').value;
+    const endDate = document.getElementById('new-end-date').value;
+    const description = document.getElementById('new-description').value.trim();
+
+    if (company && title && startDate && endDate && description) {
+      // Add to display
+      addExperienceDisplay(company, title, startDate, endDate, description, experienceIndex);
+
+      // Add hidden form field
+      addHiddenExperienceField(company, title, startDate, endDate, description);
+
+      // Clear form
+      clearExperienceForm();
+
+      // Disable add button
+      document.getElementById('add-experience-btn').disabled = true;
+
+      experienceIndex++;
+    }
+  }
+
+  function addHiddenExperienceField(company, title, startDate, endDate, description) {
+    const experienceFieldsContainer = document.getElementById('experience-fields');
+    const fieldHtml = `
+      <div class="experience-entry">
+        <input type="text" name="resume[experiences_attributes][${experienceIndex}][company_name]" value="${company}" style="display: none;">
+        <input type="text" name="resume[experiences_attributes][${experienceIndex}][title]" value="${title}" style="display: none;">
+        <input type="date" name="resume[experiences_attributes][${experienceIndex}][start_date]" value="${startDate}" style="display: none;">
+        <input type="date" name="resume[experiences_attributes][${experienceIndex}][end_date]" value="${endDate}" style="display: none;">
+        <textarea name="resume[experiences_attributes][${experienceIndex}][description]" style="display: none;">${description}</textarea>
+      </div>
+    `;
+    experienceFieldsContainer.insertAdjacentHTML('beforeend', fieldHtml);
+  }
+
+  function clearExperienceForm() {
+    document.getElementById('new-company').value = '';
+    document.getElementById('new-title').value = '';
+    document.getElementById('new-start-date').value = '';
+    document.getElementById('new-end-date').value = '';
+    document.getElementById('new-description').value = '';
+  }
+
+  function removeExperienceDisplay(index) {
+    // Remove from display
+    const displayEntry = document.querySelector(`.experience-display-entry[data-index="${index}"]`);
+    if (displayEntry) {
+      displayEntry.remove();
+    }
+
+    // Remove from hidden fields
+    const experienceFields = document.querySelectorAll('#experience-fields .experience-entry');
+    if (experienceFields[index]) {
+      experienceFields[index].remove();
+    }
+  }
 
   function validateEducationSection() {
     const educationEntries = document.querySelectorAll('.education-entry');
@@ -210,9 +386,9 @@
   }
 
   function validateExperienceSection() {
-    const experienceEntries = document.querySelectorAll('.experience-entry');
+    const experienceEntries = document.querySelectorAll('#experience-original-form .experience-entry');
     const addBtn = document.getElementById('add-experience-btn');
-    const deleteBtns = document.querySelectorAll('.experience-entry .btn-outline-danger');
+    const deleteBtns = document.querySelectorAll('#experience-original-form .experience-entry .btn-outline-danger');
 
     if (experienceEntries.length === 0) {
       addBtn.disabled = true;
@@ -309,7 +485,37 @@
   }
 
   function addExperience() {
-    const container = document.getElementById('experience-fields');
+    const experienceEntries = document.querySelectorAll('#experience-original-form .experience-entry');
+
+    // If this is the first experience, handle the transition to display mode
+    if (experienceEntries.length === 1) {
+      const lastEntry = experienceEntries[0];
+      const fields = lastEntry.querySelectorAll('.experience-field');
+
+      // Get the data from the completed experience
+      const company = fields[0].value.trim();
+      const title = fields[1].value.trim();
+      const startDate = fields[2].value;
+      const endDate = fields[3].value;
+      const description = fields[4].value.trim();
+
+      // Switch to display mode
+      switchToDisplayMode();
+
+      // Add the completed experience to display
+      addExperienceDisplay(company, title, startDate, endDate, description, 0);
+
+      // Add hidden form field
+      addHiddenExperienceField(company, title, startDate, endDate, description);
+
+      // Clear the original form
+      lastEntry.remove();
+
+      return;
+    }
+
+    // For additional experiences, add new form fields as before
+    const container = document.getElementById('experience-original-form');
     const template = `
       <div class="experience-entry card mb-3">
         <div class="card-body">
@@ -341,7 +547,7 @@
           </div>
           <div class="mb-3">
             <label class="form-label fw-bold">Job Description</label>
-            <textarea name="resume[experiences_attributes][${experienceIndex}][description]" class="form-control experience-field" rows="4" placeholder="Describe your responsibilities, achievements, and key projects..."></textarea>
+            <textarea name="resume[experiences_attributes][${experienceIndex}][description]" class="form-control experience-field" rows: 4 placeholder="Describe your responsibilities, achievements, and key projects..."></textarea>
           </div>
         </div>
       </div>
@@ -357,6 +563,33 @@
 
     // Disable button after adding
     document.getElementById('add-experience-btn').disabled = true;
+  }
+
+  function validateExperienceForm() {
+    const company = document.getElementById('new-company').value.trim();
+    const title = document.getElementById('new-title').value.trim();
+    const startDate = document.getElementById('new-start-date').value;
+    const endDate = document.getElementById('new-end-date').value;
+    const description = document.getElementById('new-description').value.trim();
+
+    const addBtn = document.getElementById('add-experience-btn-new');
+    const allFilled = company && title && startDate && endDate && description;
+
+    addBtn.disabled = !allFilled;
+  }
+
+  function switchToDisplayMode() {
+    // Hide original form
+    document.getElementById('experience-original-form').style.display = 'none';
+
+    // Show display and new form
+    document.getElementById('experience-display').style.display = 'block';
+    document.getElementById('experience-form').style.display = 'block';
+
+    // Add event listeners to new form fields
+    document.querySelectorAll('#experience-form .experience-field').forEach(field => {
+      field.addEventListener('input', validateExperienceForm);
+    });
   }
 
   function addSkill() {
