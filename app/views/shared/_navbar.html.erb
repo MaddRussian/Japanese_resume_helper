@@ -8,15 +8,9 @@
     </button>
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <ul class="navbar-nav me-auto">
-        <li class="nav-item">
-          <%= link_to "Home", root_path, class: "nav-link #{'active' if current_page?(root_path)}" %>
-        </li>
         <% if user_signed_in? %>
           <li class="nav-item">
             <%= link_to "My Resumes", resumes_path, class: "nav-link #{'active' if controller_name == 'resumes'}" %>
-          </li>
-          <li class="nav-item">
-            <%= link_to "Create New", new_resume_path, class: "nav-link #{'active' if action_name == 'new' && controller_name == 'resumes'}" %>
           </li>
         <% end %>
       </ul>
