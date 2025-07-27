@@ -42,7 +42,6 @@
                   <div class="education-entry card mb-3">
                     <div class="card-body">
                       <div class="d-flex justify-content-between align-items-start mb-3">
-                        <h6 class="text-muted mb-0">Education Entry</h6>
                         <button type="button" class="btn btn-outline-danger btn-sm" onclick="removeField(this)">
                           <i class="fas fa-trash"></i>
                         </button>
@@ -53,24 +52,40 @@
                           <%= edu.text_field :school_name, class: "form-control education-field", placeholder: "University of Tokyo" %>
                         </div>
                         <div class="col-md-6 mb-3">
-                          <%= edu.label :degree, "Degree", class: "form-label fw-bold" %>
-                          <%= edu.text_field :degree, class: "form-control education-field", placeholder: "Bachelor of Science" %>
+                          <%= edu.label :institution_type, "Institution Type", class: "form-label fw-bold" %>
+                          <%= edu.select :institution_type,
+                              options_for_select([
+                                ['Undergraduate', 'undergraduate'],
+                                ['Graduate', 'graduate'],
+                                ['Vocational School', 'vocational'],
+                                ['High School', 'high_school'],
+                                ['Community College', 'community_college'],
+                                ['Technical Institute', 'technical'],
+                                ['Language School', 'language_school'],
+                                ['Other', 'other']
+                              ]),
+                              { prompt: 'Select institution type' },
+                              { class: "form-control education-field" } %>
                         </div>
                       </div>
                       <div class="row">
+                        <div class="col-md-6 mb-3">
+                          <%= edu.label :degree, "Degree", class: "form-label fw-bold" %>
+                          <%= edu.text_field :degree, class: "form-control education-field", placeholder: "Bachelor of Science" %>
+                        </div>
                         <div class="col-md-6 mb-3">
                           <%= edu.label :field, "Field of Study", class: "form-label fw-bold" %>
                           <%= edu.text_field :field, class: "form-control education-field", placeholder: "Computer Science" %>
                         </div>
-                        <div class="col-md-6 mb-3">
-                          <%= edu.label :start_date, "Start Date", class: "form-label fw-bold" %>
-                          <%= edu.date_field :start_date, class: "form-control education-field" %>
-                        </div>
                       </div>
                       <div class="row">
                         <div class="col-md-6 mb-3">
+                          <%= edu.label :start_date, "Start Date", class: "form-label fw-bold" %>
+                          <%= edu.month_field :start_date, class: "form-control education-field" %>
+                        </div>
+                        <div class="col-md-6 mb-3">
                           <%= edu.label :end_date, "End Date", class: "form-label fw-bold" %>
-                          <%= edu.date_field :end_date, class: "form-control education-field" %>
+                          <%= edu.month_field :end_date, class: "form-control education-field" %>
                         </div>
                       </div>
                       <div class="mb-3">
@@ -90,33 +105,44 @@
               <div id="education-form" style="display: none;">
                 <div class="education-entry card mb-3">
                   <div class="card-body">
-                    <div class="mb-3">
-                      <h6 class="text-muted mb-0">Education Entry</h6>
-                    </div>
                     <div class="row">
                       <div class="col-md-6 mb-3">
                         <label class="form-label fw-bold">School Name</label>
                         <input type="text" id="new-school" class="form-control education-field" placeholder="University of Tokyo">
                       </div>
                       <div class="col-md-6 mb-3">
-                        <label class="form-label fw-bold">Degree</label>
-                        <input type="text" id="new-degree" class="form-control education-field" placeholder="Bachelor of Science">
+                        <label class="form-label fw-bold">Institution Type</label>
+                        <select id="new-institution-type" class="form-control education-field">
+                          <option value="">Select institution type</option>
+                          <option value="undergraduate">Undergraduate</option>
+                          <option value="graduate">Graduate</option>
+                          <option value="vocational">Vocational School</option>
+                          <option value="high_school">High School</option>
+                          <option value="community_college">Community College</option>
+                          <option value="technical">Technical Institute</option>
+                          <option value="language_school">Language School</option>
+                          <option value="other">Other</option>
+                        </select>
                       </div>
                     </div>
                     <div class="row">
+                      <div class="col-md-6 mb-3">
+                        <label class="form-label fw-bold">Degree</label>
+                        <input type="text" id="new-degree" class="form-control education-field" placeholder="Bachelor of Science">
+                      </div>
                       <div class="col-md-6 mb-3">
                         <label class="form-label fw-bold">Field of Study</label>
                         <input type="text" id="new-field" class="form-control education-field" placeholder="Computer Science">
                       </div>
-                      <div class="col-md-6 mb-3">
-                        <label class="form-label fw-bold">Start Date</label>
-                        <input type="date" id="new-edu-start-date" class="form-control education-field">
-                      </div>
                     </div>
                     <div class="row">
                       <div class="col-md-6 mb-3">
+                        <label class="form-label fw-bold">Start Date</label>
+                        <input type="month" id="new-edu-start-date" class="form-control education-field">
+                      </div>
+                      <div class="col-md-6 mb-3">
                         <label class="form-label fw-bold">End Date</label>
-                        <input type="date" id="new-edu-end-date" class="form-control education-field">
+                        <input type="month" id="new-edu-end-date" class="form-control education-field">
                       </div>
                     </div>
                     <div class="mb-3">
@@ -145,7 +171,6 @@
                   <div class="experience-entry card mb-3">
                     <div class="card-body">
                       <div class="d-flex justify-content-between align-items-start mb-3">
-                        <h6 class="text-muted mb-0">Work Experience Entry</h6>
                         <button type="button" class="btn btn-outline-danger btn-sm" onclick="removeField(this)">
                           <i class="fas fa-trash"></i>
                         </button>
@@ -163,11 +188,11 @@
                       <div class="row">
                         <div class="col-md-6 mb-3">
                           <%= exp.label :start_date, "Start Date", class: "form-label fw-bold" %>
-                          <%= exp.date_field :start_date, class: "form-control experience-field" %>
+                          <%= exp.month_field :start_date, class: "form-control experience-field" %>
                         </div>
                         <div class="col-md-6 mb-3">
                           <%= exp.label :end_date, "End Date", class: "form-label fw-bold" %>
-                          <%= exp.date_field :end_date, class: "form-control experience-field" %>
+                          <%= exp.month_field :end_date, class: "form-control experience-field" %>
                         </div>
                       </div>
                       <div class="mb-3">
@@ -187,9 +212,6 @@
               <div id="experience-form" style="display: none;">
                 <div class="experience-entry card mb-3">
                   <div class="card-body">
-                    <div class="mb-3">
-                      <h6 class="text-muted mb-0">Work Experience Entry</h6>
-                    </div>
                     <div class="row">
                       <div class="col-md-6 mb-3">
                         <label class="form-label fw-bold">Company Name</label>
@@ -203,11 +225,11 @@
                     <div class="row">
                       <div class="col-md-6 mb-3">
                         <label class="form-label fw-bold">Start Date</label>
-                        <input type="date" id="new-start-date" class="form-control experience-field">
+                        <input type="month" id="new-start-date" class="form-control experience-field">
                       </div>
                       <div class="col-md-6 mb-3">
                         <label class="form-label fw-bold">End Date</label>
-                        <input type="date" id="new-end-date" class="form-control experience-field">
+                        <input type="month" id="new-end-date" class="form-control experience-field">
                       </div>
                     </div>
                     <div class="mb-3">
@@ -329,7 +351,6 @@
 
   function addExperienceDisplay(company, title, startDate, endDate, description, index) {
     const displayContainer = document.getElementById('experience-display');
-
     const displayHtml = `
       <div class="card mb-3 experience-display-entry" data-index="${index}">
         <div class="card-body">
@@ -346,7 +367,7 @@
             <div class="col-md-6">
               <small class="text-muted">
                 <i class="fas fa-calendar me-1"></i>
-                ${startDate ? new Date(startDate).toLocaleDateString() : 'Start Date'} - ${endDate ? new Date(endDate).toLocaleDateString() : 'End Date'}
+                ${startDate ? formatMonthYear(startDate) : 'Start Date'} - ${endDate ? formatMonthYear(endDate) : 'End Date'}
               </small>
             </div>
           </div>
@@ -354,7 +375,6 @@
         </div>
       </div>
     `;
-
     displayContainer.insertAdjacentHTML('beforeend', displayHtml);
   }
 
@@ -388,8 +408,8 @@
       <div class="experience-entry">
         <input type="text" name="resume[experiences_attributes][${experienceIndex}][company_name]" value="${company}" style="display: none;">
         <input type="text" name="resume[experiences_attributes][${experienceIndex}][title]" value="${title}" style="display: none;">
-        <input type="date" name="resume[experiences_attributes][${experienceIndex}][start_date]" value="${startDate}" style="display: none;">
-        <input type="date" name="resume[experiences_attributes][${experienceIndex}][end_date]" value="${endDate}" style="display: none;">
+        <input type="month" name="resume[experiences_attributes][${experienceIndex}][start_date]" value="${startDate}" style="display: none;">
+        <input type="month" name="resume[experiences_attributes][${experienceIndex}][end_date]" value="${endDate}" style="display: none;">
         <textarea name="resume[experiences_attributes][${experienceIndex}][description]" style="display: none;">${description}</textarea>
       </div>
     `;
@@ -494,20 +514,21 @@
 
       // Get the data from the completed education
       const school = fields[0].value.trim();
-      const degree = fields[1].value.trim();
-      const field = fields[2].value.trim();
-      const startDate = fields[3].value;
-      const endDate = fields[4].value;
-      const description = fields[5].value.trim();
+      const institutionType = fields[1].value;
+      const degree = fields[2].value.trim();
+      const field = fields[3].value.trim();
+      const startDate = fields[4].value;
+      const endDate = fields[5].value;
+      const description = fields[6].value.trim();
 
       // Switch to display mode
       switchToEducationDisplayMode();
 
       // Add the completed education to display
-      addEducationDisplay(school, degree, field, startDate, endDate, description, 0);
+      addEducationDisplay(school, institutionType, degree, field, startDate, endDate, description, 0);
 
       // Add hidden form field
-      addHiddenEducationField(school, degree, field, startDate, endDate, description);
+      addHiddenEducationField(school, institutionType, degree, field, startDate, endDate, description);
 
       // Clear the original form
       lastEntry.remove();
@@ -521,7 +542,6 @@
       <div class="education-entry card mb-3">
         <div class="card-body">
           <div class="d-flex justify-content-between align-items-start mb-3">
-            <h6 class="text-muted mb-0">Education Entry</h6>
             <button type="button" class="btn btn-outline-danger btn-sm" onclick="removeField(this)">
               <i class="fas fa-trash"></i>
             </button>
@@ -532,24 +552,38 @@
               <input type="text" name="resume[educations_attributes][${educationIndex}][school_name]" class="form-control education-field" placeholder="University of Tokyo">
             </div>
             <div class="col-md-6 mb-3">
-              <label class="form-label fw-bold">Degree</label>
-              <input type="text" name="resume[educations_attributes][${educationIndex}][degree]" class="form-control education-field" placeholder="Bachelor of Science">
+              <label class="form-label fw-bold">Institution Type</label>
+              <select name="resume[educations_attributes][${educationIndex}][institution_type]" class="form-control education-field">
+                <option value="">Select institution type</option>
+                <option value="undergraduate">Undergraduate</option>
+                <option value="graduate">Graduate</option>
+                <option value="vocational">Vocational School</option>
+                <option value="high_school">High School</option>
+                <option value="community_college">Community College</option>
+                <option value="technical">Technical Institute</option>
+                <option value="language_school">Language School</option>
+                <option value="other">Other</option>
+              </select>
             </div>
           </div>
           <div class="row">
+            <div class="col-md-6 mb-3">
+              <label class="form-label fw-bold">Degree</label>
+              <input type="text" name="resume[educations_attributes][${educationIndex}][degree]" class="form-control education-field" placeholder="Bachelor of Science">
+            </div>
             <div class="col-md-6 mb-3">
               <label class="form-label fw-bold">Field of Study</label>
               <input type="text" name="resume[educations_attributes][${educationIndex}][field]" class="form-control education-field" placeholder="Computer Science">
             </div>
-            <div class="col-md-6 mb-3">
-              <label class="form-label fw-bold">Start Date</label>
-              <input type="date" name="resume[educations_attributes][${educationIndex}][start_date]" class="form-control education-field">
-            </div>
           </div>
           <div class="row">
             <div class="col-md-6 mb-3">
+              <label class="form-label fw-bold">Start Date</label>
+              <input type="month" name="resume[educations_attributes][${educationIndex}][start_date]" class="form-control education-field">
+            </div>
+            <div class="col-md-6 mb-3">
               <label class="form-label fw-bold">End Date</label>
-              <input type="date" name="resume[educations_attributes][${educationIndex}][end_date]" class="form-control education-field">
+              <input type="month" name="resume[educations_attributes][${educationIndex}][end_date]" class="form-control education-field">
             </div>
           </div>
           <div class="mb-3">
@@ -608,7 +642,6 @@
       <div class="experience-entry card mb-3">
         <div class="card-body">
           <div class="d-flex justify-content-between align-items-start mb-3">
-            <h6 class="text-muted mb-0">Work Experience Entry</h6>
             <button type="button" class="btn btn-outline-danger btn-sm" onclick="removeField(this)">
               <i class="fas fa-trash"></i>
             </button>
@@ -626,11 +659,11 @@
           <div class="row">
             <div class="col-md-6 mb-3">
               <label class="form-label fw-bold">Start Date</label>
-              <input type="date" name="resume[experiences_attributes][${experienceIndex}][start_date]" class="form-control experience-field">
+              <input type="month" name="resume[experiences_attributes][${experienceIndex}][start_date]" class="form-control experience-field">
             </div>
             <div class="col-md-6 mb-3">
               <label class="form-label fw-bold">End Date</label>
-              <input type="date" name="resume[experiences_attributes][${experienceIndex}][end_date]" class="form-control experience-field">
+              <input type="month" name="resume[experiences_attributes][${experienceIndex}][end_date]" class="form-control experience-field">
             </div>
           </div>
           <div class="mb-3">
@@ -804,7 +837,7 @@
       // Check if any education has data
       let hasData = false;
       educationFields.forEach(entry => {
-        const fields = entry.querySelectorAll('input, textarea');
+        const fields = entry.querySelectorAll('input, textarea, select');
         fields.forEach(field => {
           if (field.value.trim() !== '') {
             hasData = true;
@@ -818,17 +851,18 @@
 
         // Convert existing form data to display format
         educationFields.forEach((entry, index) => {
-          const fields = entry.querySelectorAll('input, textarea');
-          if (fields.length >= 6) {
+          const fields = entry.querySelectorAll('input, textarea, select');
+          if (fields.length >= 7) {
             const school = fields[0].value;
-            const degree = fields[1].value;
-            const field = fields[2].value;
-            const startDate = fields[3].value;
-            const endDate = fields[4].value;
-            const description = fields[5].value;
+            const institutionType = fields[1].value;
+            const degree = fields[2].value;
+            const field = fields[3].value;
+            const startDate = fields[4].value;
+            const endDate = fields[5].value;
+            const description = fields[6].value;
 
-            if (school || degree || field || startDate || endDate || description) {
-              addEducationDisplay(school, degree, field, startDate, endDate, description, index);
+            if (school || institutionType || degree || field || startDate || endDate || description) {
+              addEducationDisplay(school, institutionType, degree, field, startDate, endDate, description, index);
             }
           }
         });
@@ -838,6 +872,7 @@
 
   function validateEducationForm() {
     const school = document.getElementById('new-school').value.trim();
+    const institutionType = document.getElementById('new-institution-type').value;
     const degree = document.getElementById('new-degree').value.trim();
     const field = document.getElementById('new-field').value.trim();
     const startDate = document.getElementById('new-edu-start-date').value;
@@ -845,7 +880,7 @@
     const description = document.getElementById('new-edu-description').value.trim();
 
     const addBtn = document.getElementById('add-education-btn-new');
-    const allFilled = school && degree && field && startDate && endDate && description;
+    const allFilled = school && institutionType && degree && field && startDate && endDate && description;
 
     addBtn.disabled = !allFilled;
   }
@@ -864,8 +899,9 @@
     });
   }
 
-  function addEducationDisplay(school, degree, field, startDate, endDate, description, index) {
+  function addEducationDisplay(school, institutionType, degree, field, startDate, endDate, description, index) {
     const displayContainer = document.getElementById('education-display');
+    const institutionTypeText = getInstitutionTypeText(institutionType);
     const displayHtml = `
       <div class="card mb-3 education-display-entry" data-index="${index}">
         <div class="card-body">
@@ -873,6 +909,7 @@
             <div>
               <h6 class="mb-1 fw-bold text-primary">${degree || 'Degree'}</h6>
               <p class="mb-1 text-muted">${school || 'School Name'}</p>
+              <small class="text-muted">${institutionTypeText}</small>
             </div>
             <button type="button" class="btn btn-outline-danger btn-sm" onclick="removeEducationDisplay(${index})">
               <i class="fas fa-trash"></i>
@@ -888,7 +925,7 @@
             <div class="col-md-6">
               <small class="text-muted">
                 <i class="fas fa-calendar me-1"></i>
-                ${startDate ? new Date(startDate).toLocaleDateString() : 'Start Date'} - ${endDate ? new Date(endDate).toLocaleDateString() : 'End Date'}
+                ${startDate ? formatMonthYear(startDate) : 'Start Date'} - ${endDate ? formatMonthYear(endDate) : 'End Date'}
               </small>
             </div>
           </div>
@@ -899,32 +936,48 @@
     displayContainer.insertAdjacentHTML('beforeend', displayHtml);
   }
 
+  function getInstitutionTypeText(type) {
+    const types = {
+      'undergraduate': 'Undergraduate',
+      'graduate': 'Graduate',
+      'vocational': 'Vocational School',
+      'high_school': 'High School',
+      'community_college': 'Community College',
+      'technical': 'Technical Institute',
+      'language_school': 'Language School',
+      'other': 'Other'
+    };
+    return types[type] || type;
+  }
+
   function addEducationFromForm() {
     const school = document.getElementById('new-school').value.trim();
+    const institutionType = document.getElementById('new-institution-type').value;
     const degree = document.getElementById('new-degree').value.trim();
     const field = document.getElementById('new-field').value.trim();
     const startDate = document.getElementById('new-edu-start-date').value;
     const endDate = document.getElementById('new-edu-end-date').value;
     const description = document.getElementById('new-edu-description').value.trim();
 
-    if (school && degree && field && startDate && endDate && description) {
-      addEducationDisplay(school, degree, field, startDate, endDate, description, educationIndex);
-      addHiddenEducationField(school, degree, field, startDate, endDate, description);
+    if (school && institutionType && degree && field && startDate && endDate && description) {
+      addEducationDisplay(school, institutionType, degree, field, startDate, endDate, description, educationIndex);
+      addHiddenEducationField(school, institutionType, degree, field, startDate, endDate, description);
       clearEducationForm();
       document.getElementById('add-education-btn-new').disabled = true;
       educationIndex++;
     }
   }
 
-  function addHiddenEducationField(school, degree, field, startDate, endDate, description) {
+  function addHiddenEducationField(school, institutionType, degree, field, startDate, endDate, description) {
     const educationFieldsContainer = document.getElementById('education-original-form');
     const fieldHtml = `
       <div class="education-entry">
         <input type="text" name="resume[educations_attributes][${educationIndex}][school_name]" value="${school}" style="display: none;">
+        <input type="text" name="resume[educations_attributes][${educationIndex}][institution_type]" value="${institutionType}" style="display: none;">
         <input type="text" name="resume[educations_attributes][${educationIndex}][degree]" value="${degree}" style="display: none;">
         <input type="text" name="resume[educations_attributes][${educationIndex}][field]" value="${field}" style="display: none;">
-        <input type="date" name="resume[educations_attributes][${educationIndex}][start_date]" value="${startDate}" style="display: none;">
-        <input type="date" name="resume[educations_attributes][${educationIndex}][end_date]" value="${endDate}" style="display: none;">
+        <input type="month" name="resume[educations_attributes][${educationIndex}][start_date]" value="${startDate}" style="display: none;">
+        <input type="month" name="resume[educations_attributes][${educationIndex}][end_date]" value="${endDate}" style="display: none;">
         <textarea name="resume[educations_attributes][${educationIndex}][description]" style="display: none;">${description}</textarea>
       </div>
     `;
@@ -933,6 +986,7 @@
 
   function clearEducationForm() {
     document.getElementById('new-school').value = '';
+    document.getElementById('new-institution-type').value = '';
     document.getElementById('new-degree').value = '';
     document.getElementById('new-field').value = '';
     document.getElementById('new-edu-start-date').value = '';
@@ -949,5 +1003,35 @@
     if (educationFields[index]) {
       educationFields[index].remove();
     }
+  }
+
+  function formatMonthYear(dateString) {
+    if (!dateString) return '';
+
+    // Handle both date and month input formats
+    if (dateString.includes('-')) {
+      const parts = dateString.split('-');
+      if (parts.length === 2) {
+        // Month format (YYYY-MM)
+        const year = parts[0];
+        const month = parseInt(parts[1]);
+        const monthNames = [
+          'January', 'February', 'March', 'April', 'May', 'June',
+          'July', 'August', 'September', 'October', 'November', 'December'
+        ];
+        return `${monthNames[month - 1]} ${year}`;
+      } else if (parts.length === 3) {
+        // Date format (YYYY-MM-DD) - fallback for existing data
+        const year = parts[0];
+        const month = parseInt(parts[1]);
+        const monthNames = [
+          'January', 'February', 'March', 'April', 'May', 'June',
+          'July', 'August', 'September', 'October', 'November', 'December'
+        ];
+        return `${monthNames[month - 1]} ${year}`;
+      }
+    }
+
+    return dateString;
   }
 </script>
