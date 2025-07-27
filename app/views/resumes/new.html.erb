@@ -1,45 +1,127 @@
-<%= form_with model: @resume, local: true do |f| %>
-  <%= f.label :title %>
-  <%= f.text_field :title %>
-  <%= f.label :summary %>
-  <%= f.text_area :summary %>
-  <%= f.label :address %>
-  <%= f.text_field :address %>
-  <%= f.label :phone_number %>
-  <%= f.text_field :phone_number %>
-  <h2>Education</h2>
-  <%= f.fields_for :educations do |ed| %>
-    <%= ed.label :school_name %>
-    <%= ed.text_field :school_name %>
-    <%= ed.label :degree %>
-    <%= ed.text_field :degree %>
-    <%= ed.label :start_date %>
-    <%= ed.date_field :start_date %>
-    <%= ed.label :end_date %>
-    <%= ed.date_field :end_date %>
-    <hr>
-  <% end %>
-  <h2>Experience</h2>
-  <%= f.fields_for :experiences do |exp| %>
-    <%= exp.label :company_name %>
-    <%= exp.text_field :company_name %>
-    <%= exp.label :position %>
-    <%= exp.text_field :position %>
-    <%= exp.label :start_date %>
-    <%= exp.date_field :start_date %>
-    <%= exp.label :end_date %>
-    <%= exp.date_field :end_date %>
-    <%= exp.label :description %>
-    <%= exp.text_area :description %>
-    <hr>
-  <% end %>
-  <h2>Skills</h2>
-  <%= f.fields_for :skills do |skill| %>
-    <%= skill.label :name %>
-    <%= skill.text_field :name %>
-    <%= skill.label :level %>
-    <%= skill.select :level, ["Beginner", "Intermediate", "Advanced"] %>
-    <hr>
-  <% end %>
-  <%= f.submit "Create Resume" %>
-<% end %>
+<div class="container py-5">
+  <div class="row justify-content-center">
+    <div class="col-lg-8">
+      <div class="card shadow">
+        <div class="card-header bg-primary text-white">
+          <h2 class="mb-0"><i class="fas fa-file-alt me-2"></i>Create Your Japanese Resume</h2>
+        </div>
+        <div class="card-body p-4">
+          <%= form_with model: @resume, local: true do |f| %>
+            <!-- Basic Information Section -->
+            <div class="mb-4">
+              <h4 class="text-primary mb-3"><i class="fas fa-user me-2"></i>Basic Information</h4>
+              <div class="row">
+                <div class="col-md-6 mb-3">
+                  <%= f.label :title, "Resume Title", class: "form-label fw-bold" %>
+                  <%= f.text_field :title, class: "form-control", placeholder: "e.g., Software Engineer Resume" %>
+                </div>
+                <div class="col-md-6 mb-3">
+                  <%= f.label :phone_number, "Phone Number", class: "form-label fw-bold" %>
+                  <%= f.text_field :phone_number, class: "form-control", placeholder: "+81-90-1234-5678" %>
+                </div>
+              </div>
+              <div class="mb-3">
+                <%= f.label :address, "Address", class: "form-label fw-bold" %>
+                <%= f.text_field :address, class: "form-control", placeholder: "Tokyo, Japan" %>
+              </div>
+              <div class="mb-3">
+                <%= f.label :summary, "Professional Summary", class: "form-label fw-bold" %>
+                <%= f.text_area :summary, class: "form-control", rows: 4, placeholder: "Brief overview of your professional background and career objectives..." %>
+              </div>
+            </div>
+            <!-- Education Section -->
+            <div class="mb-4">
+              <h4 class="text-primary mb-3"><i class="fas fa-graduation-cap me-2"></i>Education</h4>
+              <%= f.fields_for :educations do |ed| %>
+                <div class="card mb-3">
+                  <div class="card-body">
+                    <div class="row">
+                      <div class="col-md-6 mb-3">
+                        <%= ed.label :school_name, "School/University", class: "form-label fw-bold" %>
+                        <%= ed.text_field :school_name, class: "form-control", placeholder: "University of Tokyo" %>
+                      </div>
+                      <div class="col-md-6 mb-3">
+                        <%= ed.label :degree, "Degree", class: "form-label fw-bold" %>
+                        <%= ed.text_field :degree, class: "form-control", placeholder: "Bachelor of Science" %>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-md-4 mb-3">
+                        <%= ed.label :field, "Field of Study", class: "form-label fw-bold" %>
+                        <%= ed.text_field :field, class: "form-control", placeholder: "Computer Science" %>
+                      </div>
+                      <div class="col-md-4 mb-3">
+                        <%= ed.label :start_date, "Start Date", class: "form-label fw-bold" %>
+                        <%= ed.date_field :start_date, class: "form-control" %>
+                      </div>
+                      <div class="col-md-4 mb-3">
+                        <%= ed.label :end_date, "End Date", class: "form-label fw-bold" %>
+                        <%= ed.date_field :end_date, class: "form-control" %>
+                      </div>
+                    </div>
+                    <div class="mb-3">
+                      <%= ed.label :description, "Description", class: "form-label fw-bold" %>
+                      <%= ed.text_area :description, class: "form-control", rows: 3, placeholder: "Relevant coursework, achievements, or activities..." %>
+                    </div>
+                  </div>
+                </div>
+              <% end %>
+            </div>
+            <!-- Experience Section -->
+            <div class="mb-4">
+              <h4 class="text-primary mb-3"><i class="fas fa-briefcase me-2"></i>Work Experience</h4>
+              <%= f.fields_for :experiences do |exp| %>
+                <div class="card mb-3">
+                  <div class="card-body">
+                    <div class="row">
+                      <div class="col-md-6 mb-3">
+                        <%= exp.label :company_name, "Company Name", class: "form-label fw-bold" %>
+                        <%= exp.text_field :company_name, class: "form-control", placeholder: "Sony Corporation" %>
+                      </div>
+                      <div class="col-md-6 mb-3">
+                        <%= exp.label :title, "Job Title", class: "form-label fw-bold" %>
+                        <%= exp.text_field :title, class: "form-control", placeholder: "Software Engineer" %>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-md-6 mb-3">
+                        <%= exp.label :start_date, "Start Date", class: "form-label fw-bold" %>
+                        <%= exp.date_field :start_date, class: "form-control" %>
+                      </div>
+                      <div class="col-md-6 mb-3">
+                        <%= exp.label :end_date, "End Date", class: "form-label fw-bold" %>
+                        <%= exp.date_field :end_date, class: "form-control" %>
+                      </div>
+                    </div>
+                    <div class="mb-3">
+                      <%= exp.label :description, "Job Description", class: "form-label fw-bold" %>
+                      <%= exp.text_area :description, class: "form-control", rows: 4, placeholder: "Describe your responsibilities, achievements, and key projects..." %>
+                    </div>
+                  </div>
+                </div>
+              <% end %>
+            </div>
+            <!-- Skills Section -->
+            <div class="mb-4">
+              <h4 class="text-primary mb-3"><i class="fas fa-tools me-2"></i>Skills</h4>
+              <%= f.fields_for :skills do |skill| %>
+                <div class="card mb-3">
+                  <div class="card-body">
+                    <div class="mb-3">
+                      <%= skill.label :name, "Skill Name", class: "form-label fw-bold" %>
+                      <%= skill.text_field :name, class: "form-control", placeholder: "e.g., JavaScript, Project Management, Japanese (N1)" %>
+                    </div>
+                  </div>
+                </div>
+              <% end %>
+            </div>
+            <!-- Submit Button -->
+            <div class="text-center">
+              <%= f.submit "Create Resume", class: "btn btn-primary btn-lg px-5" %>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
