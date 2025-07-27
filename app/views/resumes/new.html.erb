@@ -6,7 +6,7 @@
           <h2 class="mb-0"><i class="fas fa-file-alt me-2"></i>Create Your Japanese Resume</h2>
         </div>
         <div class="card-body p-4">
-          <%= form_with model: @resume, local: true do |f| %>
+          <%= simple_form_for @resume, html: { multipart: true } do |f| %>
             <!-- Basic Information Section -->
             <div class="mb-4">
               <h4 class="text-primary mb-3"><i class="fas fa-user me-2"></i>Basic Information</h4>
@@ -16,13 +16,20 @@
                   <%= f.text_field :title, class: "form-control", placeholder: "Your full name" %>
                 </div>
                 <div class="col-md-6 mb-3">
+                  <%= f.label :photo, "Profile Photo", class: "form-label fw-bold" %>
+                  <%= f.file_field :photo, class: "form-control", accept: "image/*" %>
+                  <small class="text-muted">Upload a professional headshot (JPG, PNG, max 5MB)</small>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-6 mb-3">
                   <%= f.label :phone_number, "Phone Number", class: "form-label fw-bold" %>
                   <%= f.text_field :phone_number, class: "form-control", placeholder: "+81-90-1234-5678" %>
                 </div>
-              </div>
-              <div class="mb-3">
-                <%= f.label :address, "Address", class: "form-label fw-bold" %>
-                <%= f.text_field :address, class: "form-control", placeholder: "Your full address" %>
+                <div class="col-md-6 mb-3">
+                  <%= f.label :address, "Address", class: "form-label fw-bold" %>
+                  <%= f.text_field :address, class: "form-control", placeholder: "Your full address" %>
+                </div>
               </div>
               <div class="mb-3">
                 <%= f.label :summary, "Professional Summary", class: "form-label fw-bold" %>

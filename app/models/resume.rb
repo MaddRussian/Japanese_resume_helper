@@ -4,6 +4,7 @@ class Resume < ApplicationRecord
   has_many :experiences, dependent: :destroy
   has_many :skills, dependent: :destroy
   has_many :certifications, dependent: :destroy
+  has_one_attached :photo
 
   accepts_nested_attributes_for :educations, allow_destroy: true
   accepts_nested_attributes_for :experiences, allow_destroy: true
@@ -12,4 +13,20 @@ class Resume < ApplicationRecord
 
   validates :title, presence: true
   validates :summary, presence: true
+  validate :acceptable_photo
+
+  private
+
+  def acceptable_photo
+    return unless photo.attached?
+
+    unless photo.blob.byte_size <= 5.megabyte
+      errors.add(:photo, 'is too large (max 5MB)')
+    end
+
+    acceptable_types = ['image/jpeg', 'image/png', 'image/jpg']
+    unless acceptable_types.include?(photo.content_type)
+      errors.add(:photo, 'must be a JPEG or PNG')
+    end
+  end
 end
