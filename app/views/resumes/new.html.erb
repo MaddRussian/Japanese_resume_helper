@@ -43,6 +43,10 @@
               <div id="education-display" class="mb-4" style="display: none;">
                 <!-- Existing educations will be displayed here -->
               </div>
+              <!-- Hidden fields for education data -->
+              <div id="education-fields" style="display: none;">
+                <!-- Hidden education form fields will be added here -->
+              </div>
               <!-- Original form fields (shown initially) -->
               <div id="education-original-form">
                 <%= f.fields_for :educations do |edu| %>
@@ -167,6 +171,10 @@
               <div id="experience-display" class="mb-4" style="display: none;">
                 <!-- Existing experiences will be displayed here -->
               </div>
+              <!-- Hidden fields for experience data -->
+              <div id="experience-fields" style="display: none;">
+                <!-- Hidden experience form fields will be added here -->
+              </div>
               <!-- Original form fields (shown initially) -->
               <div id="experience-original-form">
                 <%= f.fields_for :experiences do |exp| %>
@@ -257,6 +265,9 @@
               <div id="skills-display" class="mb-3">
                 <!-- Skills will be displayed here as tags -->
               </div>
+              <div id="skill-tags" class="mb-3">
+                <!-- Skills will be displayed here as tags -->
+              </div>
               <div id="skills-fields" style="display: none;">
                 <%= f.fields_for :skills do |skill| %>
                   <div class="skill-entry">
@@ -337,26 +348,6 @@
 
   // Add event listeners for validation
   document.addEventListener('DOMContentLoaded', function() {
-    // Education validation
-    document.querySelectorAll('.education-field').forEach(field => {
-      field.addEventListener('input', validateEducationSection);
-    });
-
-    // Experience validation
-    document.querySelectorAll('.experience-field').forEach(field => {
-      field.addEventListener('input', validateExperienceSection);
-    });
-
-    // Certification validation
-    document.querySelectorAll('.certification-field').forEach(field => {
-      field.addEventListener('input', validateCertificationSection);
-    });
-
-    // Skills validation
-    document.querySelectorAll('.skill-field').forEach(field => {
-      field.addEventListener('input', validateSkillSection);
-    });
-
     // Initialize skills from existing form fields
     initializeSkills();
 
@@ -523,7 +514,6 @@
   function validateEducationSection() {
     const educationEntries = document.querySelectorAll('#education-original-form .education-entry');
     const addBtn = document.getElementById('add-education-btn');
-    const deleteBtns = document.querySelectorAll('#education-original-form .education-entry .btn-outline-danger');
 
     if (educationEntries.length === 0) {
       addBtn.disabled = true;
@@ -531,18 +521,17 @@
     }
 
     const lastEntry = educationEntries[educationEntries.length - 1];
-    const fields = lastEntry.querySelectorAll('.education-field');
-    const allFilled = Array.from(fields).every(field => field.value.trim() !== '');
+    const fields = lastEntry.querySelectorAll('input, textarea, select');
+
+    const allFilled = Array.from(fields).every(field => {
+      const value = field.value.trim();
+      return value !== '';
+    });
 
     addBtn.disabled = !allFilled;
-
-    // Show/hide delete buttons based on number of entries
-    deleteBtns.forEach(btn => {
-      btn.style.display = educationEntries.length > 1 ? 'block' : 'none';
-    });
   }
 
-  function validateExperienceSection() {
+    function validateExperienceSection() {
     const experienceEntries = document.querySelectorAll('#experience-original-form .experience-entry');
     const addBtn = document.getElementById('add-experience-btn');
     const deleteBtns = document.querySelectorAll('#experience-original-form .experience-entry .btn-outline-danger');
@@ -554,7 +543,11 @@
 
     const lastEntry = experienceEntries[experienceEntries.length - 1];
     const fields = lastEntry.querySelectorAll('.experience-field');
-    const allFilled = Array.from(fields).every(field => field.value.trim() !== '');
+
+    const allFilled = Array.from(fields).every(field => {
+      const value = field.value.trim();
+      return value !== '';
+    });
 
     addBtn.disabled = !allFilled;
 
@@ -564,7 +557,7 @@
     });
   }
 
-  function validateCertificationSection() {
+    function validateCertificationSection() {
     const certificationEntries = document.querySelectorAll('#certification-original-form .certification-entry');
     const addBtn = document.getElementById('add-certification-btn');
     const deleteBtns = document.querySelectorAll('#certification-original-form .certification-entry .btn-outline-danger');
@@ -576,7 +569,11 @@
 
     const lastEntry = certificationEntries[certificationEntries.length - 1];
     const fields = lastEntry.querySelectorAll('.certification-field');
-    const allFilled = Array.from(fields).every(field => field.value.trim() !== '');
+
+    const allFilled = Array.from(fields).every(field => {
+      const value = field.value.trim();
+      return value !== '';
+    });
 
     addBtn.disabled = !allFilled;
 
@@ -587,25 +584,8 @@
   }
 
   function validateSkillSection() {
-    const skillEntries = document.querySelectorAll('.skill-entry');
-    const addBtn = document.getElementById('add-skill-btn');
-    const deleteBtns = document.querySelectorAll('.skill-entry .btn-outline-danger');
-
-    if (skillEntries.length === 0) {
-      addBtn.disabled = true;
-      return;
-    }
-
-    const lastEntry = skillEntries[skillEntries.length - 1];
-    const fields = lastEntry.querySelectorAll('.skill-field');
-    const allFilled = Array.from(fields).every(field => field.value.trim() !== '');
-
-    addBtn.disabled = !allFilled;
-
-    // Show/hide delete buttons based on number of entries
-    deleteBtns.forEach(btn => {
-      btn.style.display = skillEntries.length > 1 ? 'block' : 'none';
-    });
+    // Skills section uses a different validation approach with input field
+    // No need for traditional validation since skills are added via input field
   }
 
   function addEducation() {
@@ -844,8 +824,7 @@
       field.addEventListener('input', validateSkillSection);
     });
 
-    // Disable button after adding
-    document.getElementById('add-skill-btn').disabled = true;
+    // Skills are added via input field, no need to disable button
   }
 
   function removeField(button) {
@@ -1074,7 +1053,7 @@
   }
 
   function addHiddenEducationField(school, institutionType, degree, field, startDate, endDate, description) {
-    const educationFieldsContainer = document.getElementById('education-original-form');
+    const educationFieldsContainer = document.getElementById('education-fields');
     const fieldHtml = `
       <div class="education-entry">
         <input type="text" name="resume[educations_attributes][${educationIndex}][school_name]" value="${school}" style="display: none;">
@@ -1104,7 +1083,7 @@
     if (displayEntry) {
       displayEntry.remove();
     }
-    const educationFields = document.querySelectorAll('#education-original-form .education-entry');
+    const educationFields = document.querySelectorAll('#education-fields .education-entry');
     if (educationFields[index]) {
       educationFields[index].remove();
     }
