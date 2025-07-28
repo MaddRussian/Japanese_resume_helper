@@ -5,6 +5,8 @@ class Resume < ApplicationRecord
   has_many :skills, dependent: :destroy
   has_many :certifications, dependent: :destroy
   has_one_attached :photo
+  has_one_attached :rirekisho_pdf
+  has_one_attached :shokumu_keirekisho_pdf
 
   accepts_nested_attributes_for :educations, allow_destroy: true
   accepts_nested_attributes_for :experiences, allow_destroy: true

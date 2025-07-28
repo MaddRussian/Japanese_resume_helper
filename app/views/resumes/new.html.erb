@@ -7,6 +7,63 @@
         </div>
         <div class="card-body p-4">
           <%= simple_form_for @resume, html: { multipart: true } do |f| %>
+            <% if @resume.errors.any? %>
+              <div class="alert alert-danger">
+                <h4><%= pluralize(@resume.errors.count, "error") %> prohibited this resume from being saved:</h4>
+                <ul>
+                  <% @resume.errors.full_messages.each do |msg| %>
+                    <li><%= msg %></li>
+                  <% end %>
+                </ul>
+              </div>
+            <% end %>
+            <script>
+              // --- Resume Form Persistence ---
+              const FORM_KEY = 'resume_form_data_v1';
+              document.addEventListener('DOMContentLoaded', function() {
+                const form = document.querySelector('form');
+                if (!form) return;
+
+                // Restore data
+                const saved = localStorage.getItem(FORM_KEY);
+                if (saved) {
+                  try {
+                    const data = JSON.parse(saved);
+                    for (const [name, value] of Object.entries(data)) {
+                      // Don't restore file fields
+                      const field = form.querySelector(`[name="${CSS.escape(name)}"]`);
+                      if (field && field.type !== 'file') {
+                        field.value = value;
+                        // For select fields, trigger change event
+                        if (field.tagName === 'SELECT') {
+                          field.dispatchEvent(new Event('change'));
+                        }
+                      }
+                    }
+                  } catch(e) { /* ignore */ }
+                }
+
+                // Save data on input/change
+                form.addEventListener('input', saveFormData);
+                form.addEventListener('change', saveFormData);
+
+                function saveFormData() {
+                  const fields = form.querySelectorAll('input, textarea, select');
+                  const data = {};
+                  fields.forEach(field => {
+                    if (field.name && field.type !== 'file') {
+                      data[field.name] = field.value;
+                    }
+                  });
+                  localStorage.setItem(FORM_KEY, JSON.stringify(data));
+                }
+
+                // Clear data on successful submit
+                form.addEventListener('submit', function() {
+                  localStorage.removeItem(FORM_KEY);
+                });
+              });
+            </script>
             <!-- Basic Information Section -->
             <div class="mb-4">
               <h4 class="text-primary mb-3"><i class="fas fa-user me-2"></i>Basic Information</h4>
@@ -256,7 +313,7 @@
               <div class="mb-3">
                 <label class="form-label fw-bold">Add Skills (separate with commas)</label>
                 <div class="input-group">
-                  <input type="text" id="skill-input" class="form-control" placeholder="e.g., JavaScript, React, Project Management">
+                  <input type="text" id="skill-input" class="form-control" placeholder="e.g., JavaScript, React, Project Management" onkeypress="handleSkillKeyPress(event)">
                   <button type="button" class="btn btn-outline-primary" onclick="addSkillFromInput()">
                     <i class="fas fa-plus me-1"></i>Add
                   </button>
@@ -382,6 +439,14 @@
     document.querySelectorAll('.skill-field').forEach(field => {
       field.addEventListener('input', validateSkillSection);
     });
+
+    // Re-initialize validation after form re-render (for validation errors)
+    setTimeout(() => {
+      validateExperienceSection();
+      validateEducationSection();
+      validateCertificationSection();
+      validateSkillSection();
+    }, 100);
   });
 
   function initializeExperienceDisplay() {
@@ -798,59 +863,14 @@
   }
 
   function addSkill() {
-    const container = document.getElementById('skill-fields');
-    const template = `
-      <div class="skill-entry card mb-3">
-        <div class="card-body">
-          <div class="d-flex justify-content-between align-items-start mb-3">
-            <h6 class="text-muted mb-0">Skill Entry</h6>
-            <button type="button" class="btn btn-outline-danger btn-sm" onclick="removeField(this)">
-              <i class="fas fa-trash"></i>
-            </button>
-          </div>
-          <div class="mb-3">
-            <label class="form-label fw-bold">Skill Name</label>
-            <input type="text" name="resume[skills_attributes][${skillIndex}][name]" class="form-control skill-field" placeholder="e.g., JavaScript, Project Management, Japanese (N1)">
-          </div>
-        </div>
-      </div>
-    `;
-    container.insertAdjacentHTML('beforeend', template);
-    skillIndex++;
-
-    // Add event listeners to new fields
-    const newEntry = container.lastElementChild;
-    newEntry.querySelectorAll('.skill-field').forEach(field => {
-      field.addEventListener('input', validateSkillSection);
-    });
-
-    // Skills are added via input field, no need to disable button
-  }
-
-  function removeField(button) {
-    button.closest('.education-entry, .experience-entry, .skill-entry, .certification-entry').remove();
-
-    // Re-validate sections after removal
-    setTimeout(() => {
-      validateEducationSection();
-      validateExperienceSection();
-      validateCertificationSection();
+    const skillInput = document.getElementById('skill-input');
+    const skill = skillInput.value.trim();
+    if (skill) {
+      addSkillTag(skill);
+      addHiddenSkillField(skill);
+      skillInput.value = '';
       validateSkillSection();
-    }, 100);
-  }
-
-  function initializeSkills() {
-    const skillFields = document.querySelectorAll('.skill-field');
-    const skillTagsContainer = document.getElementById('skill-tags');
-
-    skillFields.forEach(field => {
-      if (field.value.trim() !== '') {
-        addSkillTag(field.value.trim());
-      }
-    });
-
-    // Clear the original fields since we're using tags now
-    skillFields.forEach(field => field.value = '');
+    }
   }
 
   function handleSkillKeyPress(event) {
@@ -866,7 +886,15 @@
 
     if (skillName !== '') {
       addSkillTag(skillName);
-      input.value = '';
+      setTimeout(() => {
+        // Clear after DOM update in case input is replaced
+        const inputAgain = document.getElementById('skill-input');
+        if (inputAgain) {
+          inputAgain.value = '';
+          inputAgain.focus();
+          console.log('Skill input cleared:', inputAgain.value);
+        }
+      }, 50);
     }
   }
 

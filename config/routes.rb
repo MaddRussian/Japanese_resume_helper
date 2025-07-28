@@ -10,5 +10,10 @@ Rails.application.routes.draw do
   # Defines the root path route ("/")
   # root "posts#index"
 
-  resources :resumes
+  resources :resumes do
+    member do
+      get :download_rirekisho
+      get :download_shokumu_keirekisho
+    end
+  end
 end

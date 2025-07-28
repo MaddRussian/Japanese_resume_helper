@@ -1,0 +1,201 @@
+<div class="container py-5">
+  <div class="row">
+    <div class="col-lg-10 mx-auto">
+      <div class="card shadow">
+        <div class="card-header bg-primary text-white">
+          <div class="d-flex justify-content-between align-items-center">
+            <h2 class="mb-0"><i class="fas fa-file-alt me-2"></i><%= @resume.title %>'s Resume</h2>
+            <div>
+              <% if @resume.rirekisho_pdf.attached? %>
+                <%= link_to download_rirekisho_resume_path(@resume), class: "btn btn-light btn-sm me-2" do %>
+                  <i class="fas fa-download me-1"></i>履歴書 PDF
+                <% end %>
+              <% end %>
+              <% if @resume.shokumu_keirekisho_pdf.attached? %>
+                <%= link_to download_shokumu_keirekisho_resume_path(@resume), class: "btn btn-light btn-sm" do %>
+                  <i class="fas fa-download me-1"></i>職務経歴書 PDF
+                <% end %>
+              <% end %>
+            </div>
+          </div>
+        </div>
+        <div class="card-body p-4">
+          <!-- Basic Information -->
+          <div class="mb-4">
+            <h4 class="text-primary mb-3"><i class="fas fa-user me-2"></i>基本情報 (Basic Information)</h4>
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <strong>氏名 (Name):</strong> <%= @resume.title %>
+              </div>
+              <div class="col-md-6 mb-3">
+                <strong>電話番号 (Phone):</strong> <%= @resume.phone_number %>
+              </div>
+            </div>
+            <div class="mb-3">
+              <strong>住所 (Address):</strong> <%= @resume.address %>
+            </div>
+            <div class="mb-3">
+              <strong>自己紹介 (Summary):</strong> <%= @resume.summary %>
+            </div>
+          </div>
+          <!-- Education Section -->
+          <% if @resume.educations.any? %>
+            <div class="mb-4">
+              <h4 class="text-primary mb-3"><i class="fas fa-graduation-cap me-2"></i>学歴 (Education)</h4>
+              <% @resume.educations.each do |education| %>
+                <div class="card mb-3">
+                  <div class="card-body">
+                    <div class="row">
+                      <div class="col-md-6">
+                        <strong>学校名:</strong> <%= education.school_name %>
+                      </div>
+                      <div class="col-md-6">
+                        <strong>種別:</strong> <%= education.institution_type %>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-md-6">
+                        <strong>学位:</strong> <%= education.degree %>
+                      </div>
+                      <div class="col-md-6">
+                        <strong>専攻:</strong> <%= education.field %>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-md-6">
+                        <strong>期間:</strong> <%= education.start_date %> - <%= education.end_date %>
+                      </div>
+                    </div>
+                    <% if education.description.present? %>
+                      <div class="mt-2">
+                        <strong>詳細:</strong> <%= education.description %>
+                      </div>
+                    <% end %>
+                  </div>
+                </div>
+              <% end %>
+            </div>
+          <% end %>
+          <!-- Experience Section -->
+          <% if @resume.experiences.any? %>
+            <div class="mb-4">
+              <h4 class="text-primary mb-3"><i class="fas fa-briefcase me-2"></i>職歴 (Work Experience)</h4>
+              <% @resume.experiences.each do |experience| %>
+                <div class="card mb-3">
+                  <div class="card-body">
+                    <div class="row">
+                      <div class="col-md-6">
+                        <strong>会社名:</strong> <%= experience.company_name %>
+                      </div>
+                      <div class="col-md-6">
+                        <strong>職位:</strong> <%= experience.title %>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-md-6">
+                        <strong>期間:</strong> <%= experience.start_date %> - <%= experience.end_date %>
+                      </div>
+                    </div>
+                    <% if experience.description.present? %>
+                      <div class="mt-2">
+                        <strong>職務内容:</strong> <%= experience.description %>
+                      </div>
+                    <% end %>
+                  </div>
+                </div>
+              <% end %>
+            </div>
+          <% end %>
+          <!-- Skills Section -->
+          <% if @resume.skills.any? %>
+            <div class="mb-4">
+              <h4 class="text-primary mb-3"><i class="fas fa-tools me-2"></i>スキル (Skills)</h4>
+              <div class="d-flex flex-wrap">
+                <% @resume.skills.each do |skill| %>
+                  <span class="badge bg-primary me-2 mb-2 p-2"><%= skill.name %></span>
+                <% end %>
+              </div>
+            </div>
+          <% end %>
+          <!-- Certifications Section -->
+          <% if @resume.certifications.any? %>
+            <div class="mb-4">
+              <h4 class="text-primary mb-3"><i class="fas fa-certificate me-2"></i>資格・認定 (Certifications)</h4>
+              <% @resume.certifications.each do |certification| %>
+                <div class="card mb-3">
+                  <div class="card-body">
+                    <div class="row">
+                      <div class="col-md-8">
+                        <strong>資格名:</strong> <%= certification.name %>
+                      </div>
+                      <div class="col-md-4">
+                        <strong>取得年月:</strong> <%= certification.completion_date %>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              <% end %>
+            </div>
+          <% end %>
+          <!-- Japanese Resume Preview -->
+          <div class="mb-4">
+            <h4 class="text-primary mb-3"><i class="fas fa-language me-2"></i>日本語履歴書プレビュー (Japanese Resume Preview)</h4>
+            <!-- Rirekisho Preview -->
+            <div class="card mb-3">
+              <div class="card-header">
+                <h5 class="mb-0">履歴書 (Rirekisho)</h5>
+              </div>
+              <div class="card-body">
+                <div class="row">
+                  <div class="col-md-6">
+                    <strong>氏名:</strong> <%= @rirekisho_data[:basic_info][:name] %>
+                  </div>
+                  <div class="col-md-6">
+                    <strong>住所:</strong> <%= @rirekisho_data[:basic_info][:address] %>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-6">
+                    <strong>電話番号:</strong> <%= @rirekisho_data[:basic_info][:phone] %>
+                  </div>
+                </div>
+                <div class="mt-2">
+                  <strong>自己紹介:</strong> <%= @rirekisho_data[:basic_info][:summary] %>
+                </div>
+              </div>
+            </div>
+            <!-- Shokumu Keirekisho Preview -->
+            <div class="card mb-3">
+              <div class="card-header">
+                <h5 class="mb-0">職務経歴書 (Shokumu Keirekisho)</h5>
+              </div>
+              <div class="card-body">
+                <div class="row">
+                  <div class="col-md-6">
+                    <strong>氏名:</strong> <%= @shokumu_keirekisho_data[:basic_info][:name] %>
+                  </div>
+                  <div class="col-md-6">
+                    <strong>住所:</strong> <%= @shokumu_keirekisho_data[:basic_info][:address] %>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-6">
+                    <strong>電話番号:</strong> <%= @shokumu_keirekisho_data[:basic_info][:phone] %>
+                  </div>
+                </div>
+                <div class="mt-2">
+                  <strong>自己紹介:</strong> <%= @shokumu_keirekisho_data[:basic_info][:summary] %>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- Action Buttons -->
+          <div class="text-center">
+            <%= link_to "Edit Resume", edit_resume_path(@resume), class: "btn btn-primary me-2" %>
+            <%= link_to "Back to Resumes", resumes_path, class: "btn btn-outline-secondary" %>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
