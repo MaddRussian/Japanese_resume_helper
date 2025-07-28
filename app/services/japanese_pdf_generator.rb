@@ -23,11 +23,40 @@ class JapanesePdfGenerator
   private
 
   def setup_fonts(pdf)
-    # Use default font that supports basic Japanese characters
-    pdf.font "Helvetica"
+    # Use a font that supports basic characters
+    # Try different fonts that might be available
+    available_fonts = ['Times-Roman', 'Helvetica', 'Courier']
+
+    available_fonts.each do |font_name|
+      begin
+        pdf.font font_name
+        break
+      rescue
+        next
+      end
+    end
+  end
+
+  def sanitize_for_pdf(text)
+    return "" if text.nil?
+    # Remove or replace non-ASCII characters and handle specific symbols
+    # More aggressive sanitization for Japanese characters
+    text.to_s.encode('ASCII', 'UTF-8', invalid: :replace, undef: :replace, replace: '?')
+         .gsub('+', 'plus ')
+         .gsub('–', '-')
+         .gsub('—', '-')
+         .gsub('…', '...')
   end
 
   def generate_rirekisho_content(pdf)
+    # Debug: Log the data to see what's causing encoding issues
+    puts "DEBUG: Resume data for PDF generation:"
+    puts "Basic info: #{@resume_data[:basic_info]}"
+    puts "Skills: #{@resume_data[:skills]}"
+    puts "Education: #{@resume_data[:education]}"
+    puts "Experience: #{@resume_data[:experience]}"
+    puts "Certifications: #{@resume_data[:certifications]}"
+
     # Title
     pdf.text "Rirekisho (Resume)", size: 24, style: :bold, align: :center
     pdf.move_down 20
@@ -38,10 +67,10 @@ class JapanesePdfGenerator
 
     basic_info = @resume_data[:basic_info]
     basic_table_data = [
-      ["Name", basic_info[:name]],
-      ["Address", basic_info[:address]],
-      ["Phone", basic_info[:phone]],
-      ["Summary", basic_info[:summary]]
+      ["Name", sanitize_for_pdf(basic_info[:name])],
+      ["Address", sanitize_for_pdf(basic_info[:address])],
+      ["Phone", sanitize_for_pdf(basic_info[:phone])],
+      ["Summary", sanitize_for_pdf(basic_info[:summary])]
     ]
 
     pdf.table(basic_table_data, width: pdf.bounds.width) do
@@ -57,17 +86,21 @@ class JapanesePdfGenerator
     pdf.move_down 10
 
     if @resume_data[:education].any?
-      education_data = @resume_data[:education].map do |edu|
+      # Add headers as first row
+      education_data = [["Period", "School Name", "Type", "Degree/Major", "Details"]]
+
+      # Add education entries
+      education_data += @resume_data[:education].map do |edu|
         [
-          "#{edu[:start_date]} - #{edu[:end_date]}",
-          edu[:school_name],
-          edu[:institution_type],
-          "#{edu[:degree]} #{edu[:field]}",
-          edu[:description]
+          "#{sanitize_for_pdf(edu[:start_date])} - #{sanitize_for_pdf(edu[:end_date])}",
+          sanitize_for_pdf(edu[:school_name]),
+          sanitize_for_pdf(edu[:institution_type]),
+          "#{sanitize_for_pdf(edu[:degree])} #{sanitize_for_pdf(edu[:field])}",
+          sanitize_for_pdf(edu[:description])
         ]
       end
 
-      pdf.table(education_data, width: pdf.bounds.width, headers: ["Period", "School Name", "Type", "Degree/Major", "Details"]) do
+      pdf.table(education_data, width: pdf.bounds.width) do
         cells.padding = 6
         cells.borders = [:bottom]
         row(0).font_style = :bold
@@ -82,16 +115,20 @@ class JapanesePdfGenerator
     pdf.move_down 10
 
     if @resume_data[:experience].any?
-      experience_data = @resume_data[:experience].map do |exp|
+      # Add headers as first row
+      experience_data = [["Period", "Company", "Position", "Job Description"]]
+
+      # Add experience entries
+      experience_data += @resume_data[:experience].map do |exp|
         [
-          "#{exp[:start_date]} - #{exp[:end_date]}",
-          exp[:company],
-          exp[:title],
-          exp[:description]
+          "#{sanitize_for_pdf(exp[:start_date])} - #{sanitize_for_pdf(exp[:end_date])}",
+          sanitize_for_pdf(exp[:company]),
+          sanitize_for_pdf(exp[:title]),
+          sanitize_for_pdf(exp[:description])
         ]
       end
 
-      pdf.table(experience_data, width: pdf.bounds.width, headers: ["Period", "Company", "Position", "Job Description"]) do
+      pdf.table(experience_data, width: pdf.bounds.width) do
         cells.padding = 6
         cells.borders = [:bottom]
         row(0).font_style = :bold
@@ -106,11 +143,15 @@ class JapanesePdfGenerator
     pdf.move_down 10
 
     if @resume_data[:skills].any?
-      skills_data = @resume_data[:skills].map do |skill|
+      # Add headers as first row
+      skills_data = [["Skill Name", "Level"]]
+
+      # Add skills entries
+      skills_data += @resume_data[:skills].map do |skill|
         [skill[:name], skill[:level]]
       end
 
-      pdf.table(skills_data, width: pdf.bounds.width, headers: ["Skill Name", "Level"]) do
+      pdf.table(skills_data, width: pdf.bounds.width) do
         cells.padding = 6
         cells.borders = [:bottom]
         row(0).font_style = :bold
@@ -125,11 +166,15 @@ class JapanesePdfGenerator
     pdf.move_down 10
 
     if @resume_data[:certifications].any?
-      cert_data = @resume_data[:certifications].map do |cert|
+      # Add headers as first row
+      cert_data = [["Certification Name", "Completion Date"]]
+
+      # Add certification entries
+      cert_data += @resume_data[:certifications].map do |cert|
         [cert[:name], cert[:completion_date]]
       end
 
-      pdf.table(cert_data, width: pdf.bounds.width, headers: ["Certification Name", "Completion Date"]) do
+      pdf.table(cert_data, width: pdf.bounds.width) do
         cells.padding = 6
         cells.borders = [:bottom]
         row(0).font_style = :bold
@@ -149,10 +194,10 @@ class JapanesePdfGenerator
 
     basic_info = @resume_data[:basic_info]
     basic_table_data = [
-      ["Name", basic_info[:name]],
-      ["Address", basic_info[:address]],
-      ["Phone", basic_info[:phone]],
-      ["Summary", basic_info[:summary]]
+      ["Name", sanitize_for_pdf(basic_info[:name])],
+      ["Address", sanitize_for_pdf(basic_info[:address])],
+      ["Phone", sanitize_for_pdf(basic_info[:phone])],
+      ["Summary", sanitize_for_pdf(basic_info[:summary])]
     ]
 
     pdf.table(basic_table_data, width: pdf.bounds.width) do
@@ -169,20 +214,20 @@ class JapanesePdfGenerator
 
     if @resume_data[:experience].any?
       @resume_data[:experience].each_with_index do |exp, index|
-        pdf.text "[#{index + 1}] #{exp[:company]} - #{exp[:title]}", size: 14, style: :bold
+        pdf.text "[#{index + 1}] #{sanitize_for_pdf(exp[:company])} - #{sanitize_for_pdf(exp[:title])}", size: 14, style: :bold
         pdf.move_down 5
 
         details = [
-          ["Period", exp[:start_date] + " - " + exp[:end_date]],
-          ["Job Description", exp[:description]]
+          ["Period", sanitize_for_pdf(exp[:start_date]) + " - " + sanitize_for_pdf(exp[:end_date])],
+          ["Job Description", sanitize_for_pdf(exp[:description])]
         ]
 
         if exp[:achievements]&.any?
-          details << ["Key Achievements", exp[:achievements].join(", ")]
+          details << ["Key Achievements", sanitize_for_pdf(exp[:achievements].join(", "))]
         end
 
         if exp[:technologies]&.any?
-          details << ["Technologies Used", exp[:technologies].join(", ")]
+          details << ["Technologies Used", sanitize_for_pdf(exp[:technologies].join(", "))]
         end
 
         pdf.table(details, width: pdf.bounds.width) do
@@ -202,11 +247,15 @@ class JapanesePdfGenerator
     pdf.move_down 10
 
     if @resume_data[:skills].any?
-      skills_data = @resume_data[:skills].map do |skill|
+      # Add headers as first row
+      skills_data = [["Skill Name", "Level"]]
+
+      # Add skills entries
+      skills_data += @resume_data[:skills].map do |skill|
         [skill[:name], skill[:level]]
       end
 
-      pdf.table(skills_data, width: pdf.bounds.width, headers: ["Skill Name", "Level"]) do
+      pdf.table(skills_data, width: pdf.bounds.width) do
         cells.padding = 6
         cells.borders = [:bottom]
         row(0).font_style = :bold
@@ -221,11 +270,15 @@ class JapanesePdfGenerator
     pdf.move_down 10
 
     if @resume_data[:certifications].any?
-      cert_data = @resume_data[:certifications].map do |cert|
+      # Add headers as first row
+      cert_data = [["Certification Name", "Completion Date"]]
+
+      # Add certification entries
+      cert_data += @resume_data[:certifications].map do |cert|
         [cert[:name], cert[:completion_date]]
       end
 
-      pdf.table(cert_data, width: pdf.bounds.width, headers: ["Certification Name", "Completion Date"]) do
+      pdf.table(cert_data, width: pdf.bounds.width) do
         cells.padding = 6
         cells.borders = [:bottom]
         row(0).font_style = :bold

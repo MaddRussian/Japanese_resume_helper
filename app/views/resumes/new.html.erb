@@ -749,74 +749,9 @@
       return;
     }
 
-    // For additional educations, add new form fields as before
-    const container = document.getElementById('education-original-form');
-    const template = `
-      <div class="education-entry card mb-3">
-        <div class="card-body">
-          <div class="d-flex justify-content-between align-items-start mb-3">
-            <button type="button" class="btn btn-outline-danger btn-sm" onclick="removeField(this)">
-              <i class="fas fa-trash"></i>
-            </button>
-          </div>
-          <div class="row">
-            <div class="col-md-6 mb-3">
-              <label class="form-label fw-bold">School Name</label>
-              <input type="text" name="resume[educations_attributes][${educationIndex}][school_name]" class="form-control education-field" placeholder="University of Tokyo">
-            </div>
-            <div class="col-md-6 mb-3">
-              <label class="form-label fw-bold">Institution Type</label>
-              <select name="resume[educations_attributes][${educationIndex}][institution_type]" class="form-control education-field">
-                <option value="">Select institution type</option>
-                <option value="undergraduate">Undergraduate</option>
-                <option value="graduate">Graduate</option>
-                <option value="vocational">Vocational School</option>
-                <option value="high_school">High School</option>
-                <option value="community_college">Community College</option>
-                <option value="technical">Technical Institute</option>
-                <option value="language_school">Language School</option>
-                <option value="other">Other</option>
-              </select>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-md-6 mb-3">
-              <label class="form-label fw-bold">Degree</label>
-              <input type="text" name="resume[educations_attributes][${educationIndex}][degree]" class="form-control education-field" placeholder="Bachelor of Science">
-            </div>
-            <div class="col-md-6 mb-3">
-              <label class="form-label fw-bold">Field of Study</label>
-              <input type="text" name="resume[educations_attributes][${educationIndex}][field]" class="form-control education-field" placeholder="Computer Science">
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-md-6 mb-3">
-              <label class="form-label fw-bold">Start Date</label>
-              <input type="month" name="resume[educations_attributes][${educationIndex}][start_date]" class="form-control education-field">
-            </div>
-            <div class="col-md-6 mb-3">
-              <label class="form-label fw-bold">End Date</label>
-              <input type="month" name="resume[educations_attributes][${educationIndex}][end_date]" class="form-control education-field">
-            </div>
-          </div>
-          <div class="mb-3">
-            <label class="form-label fw-bold">Description</label>
-            <textarea name="resume[educations_attributes][${educationIndex}][description]" class="form-control education-field" rows: 3 placeholder="Relevant coursework, achievements, GPA..."></textarea>
-          </div>
-        </div>
-      </div>
-    `;
-    container.insertAdjacentHTML('beforeend', template);
-    educationIndex++;
-
-    // Add event listeners to new fields
-    const newEntry = container.lastElementChild;
-    newEntry.querySelectorAll('.education-field').forEach(field => {
-      field.addEventListener('input', validateEducationSection);
-    });
-
-    // Disable button after adding
-    document.getElementById('add-education-btn').disabled = true;
+    // For additional educations, show the new education form
+    document.getElementById('education-form').style.display = 'block';
+    document.getElementById('add-education-btn').style.display = 'none';
   }
 
   function addExperience() {
@@ -849,54 +784,9 @@
       return;
     }
 
-    // For additional experiences, add new form fields as before
-    const container = document.getElementById('experience-original-form');
-    const template = `
-      <div class="experience-entry card mb-3">
-        <div class="card-body">
-          <div class="d-flex justify-content-between align-items-start mb-3">
-            <button type="button" class="btn btn-outline-danger btn-sm" onclick="removeField(this)">
-              <i class="fas fa-trash"></i>
-            </button>
-          </div>
-          <div class="row">
-            <div class="col-md-6 mb-3">
-              <label class="form-label fw-bold">Company Name</label>
-              <input type="text" name="resume[experiences_attributes][${experienceIndex}][company_name]" class="form-control experience-field" placeholder="Sony Corporation">
-            </div>
-            <div class="col-md-6 mb-3">
-              <label class="form-label fw-bold">Job Title</label>
-              <input type="text" name="resume[experiences_attributes][${experienceIndex}][title]" class="form-control experience-field" placeholder="Software Engineer">
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-md-6 mb-3">
-              <label class="form-label fw-bold">Start Date</label>
-              <input type="month" name="resume[experiences_attributes][${experienceIndex}][start_date]" class="form-control experience-field">
-            </div>
-            <div class="col-md-6 mb-3">
-              <label class="form-label fw-bold">End Date</label>
-              <input type="month" name="resume[experiences_attributes][${experienceIndex}][end_date]" class="form-control experience-field">
-            </div>
-          </div>
-          <div class="mb-3">
-            <label class="form-label fw-bold">Job Description</label>
-            <textarea name="resume[experiences_attributes][${experienceIndex}][description]" class="form-control experience-field" rows: 4 placeholder="Describe your responsibilities, achievements, and key projects..."></textarea>
-          </div>
-        </div>
-      </div>
-    `;
-    container.insertAdjacentHTML('beforeend', template);
-    experienceIndex++;
-
-    // Add event listeners to new fields
-    const newEntry = container.lastElementChild;
-    newEntry.querySelectorAll('.experience-field').forEach(field => {
-      field.addEventListener('input', validateExperienceSection);
-    });
-
-    // Disable button after adding
-    document.getElementById('add-experience-btn').disabled = true;
+    // For additional experiences, show the new experience form
+    document.getElementById('experience-form').style.display = 'block';
+    document.getElementById('add-experience-btn').style.display = 'none';
   }
 
   function validateExperienceForm() {

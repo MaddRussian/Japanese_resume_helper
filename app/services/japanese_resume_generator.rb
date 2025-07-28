@@ -7,34 +7,34 @@ class JapaneseResumeGenerator
   # Japanese translations for common terms
   JAPANESE_TRANSLATIONS = {
     # Education
-    'undergraduate' => '大学',
-    'graduate' => '大学院',
-    'vocational' => '専門学校',
-    'high_school' => '高校',
-    'community_college' => '短期大学',
-    'technical' => '工業高等専門学校',
-    'language_school' => '語学学校',
-    'other' => 'その他',
+    'undergraduate' => 'Undergraduate',
+    'graduate' => 'Graduate',
+    'vocational' => 'Vocational School',
+    'high_school' => 'High School',
+    'community_college' => 'Community College',
+    'technical' => 'Technical Institute',
+    'language_school' => 'Language School',
+    'other' => 'Other',
 
     # Degrees
-    'Bachelor of Science' => '理学士',
-    'Bachelor of Arts' => '文学士',
-    'Master of Science' => '理学修士',
-    'Master of Arts' => '文学修士',
-    'PhD' => '博士',
+    'Bachelor of Science' => 'Bachelor of Science',
+    'Bachelor of Arts' => 'Bachelor of Arts',
+    'Master of Science' => 'Master of Science',
+    'Master of Arts' => 'Master of Arts',
+    'PhD' => 'PhD',
 
     # Common fields
-    'Computer Science' => 'コンピュータサイエンス',
-    'Engineering' => '工学',
-    'Business' => '経営学',
-    'Economics' => '経済学',
+    'Computer Science' => 'Computer Science',
+    'Engineering' => 'Engineering',
+    'Business' => 'Business',
+    'Economics' => 'Economics',
 
     # Job titles
-    'Software Engineer' => 'ソフトウェアエンジニア',
-    'Developer' => '開発者',
-    'Programmer' => 'プログラマー',
-    'Manager' => 'マネージャー',
-    'Director' => 'ディレクター',
+    'Software Engineer' => 'Software Engineer',
+    'Developer' => 'Developer',
+    'Programmer' => 'Programmer',
+    'Manager' => 'Manager',
+    'Director' => 'Director',
 
     # Common skills
     'JavaScript' => 'JavaScript',
@@ -43,9 +43,9 @@ class JapaneseResumeGenerator
     'React' => 'React',
     'Ruby' => 'Ruby',
     'Rails' => 'Rails',
-    'Project Management' => 'プロジェクトマネジメント',
-    'Japanese' => '日本語',
-    'English' => '英語'
+    'Project Management' => 'Project Management',
+    'Japanese' => 'Japanese',
+    'English' => 'English'
   }.freeze
 
   def generate_rirekisho
@@ -158,24 +158,24 @@ class JapaneseResumeGenerator
   end
 
   def translate_address(address)
-    # Basic address translation - could be enhanced with more sophisticated translation
-    address.gsub('Address', '住所').gsub('address', '住所')
+    # For PDF generation, return a safe English version
+    # This prevents encoding issues with Japanese characters
+    if address.present? && address.match?(/[^\x00-\x7F]/)
+      # If address contains non-ASCII characters, use a placeholder
+      "Address provided (Japanese characters not shown in PDF)"
+    else
+      address
+    end
   end
 
   def translate_summary(summary)
-    # Basic summary translation - could be enhanced with AI translation
-    summary.gsub('computer programmer', 'コンピュータプログラマー')
-           .gsub('software engineer', 'ソフトウェアエンジニア')
-           .gsub('developer', '開発者')
+    # Keep summary in English for now
+    summary
   end
 
   def translate_description(description)
-    # Basic description translation - could be enhanced with AI translation
-    description.gsub('responsibilities', '責任')
-              .gsub('achievements', '成果')
-              .gsub('projects', 'プロジェクト')
-              .gsub('development', '開発')
-              .gsub('management', '管理')
+    # Keep description in English for now
+    description
   end
 
   def format_japanese_date(date)
@@ -183,23 +183,23 @@ class JapaneseResumeGenerator
 
     if date.is_a?(String) && date.match?(/\A\d{4}-\d{2}\z/)
       year, month = date.split('-')
-      "#{year}年#{month}月"
+      "#{year}-#{month}"
     else
       date.to_s
     end
   end
 
   def determine_skill_level(skill_name)
-    # Basic skill level determination
+    # Basic skill level determination - return English for PDF compatibility
     skill_lower = skill_name.downcase
     if skill_lower.include?('expert') || skill_lower.include?('advanced')
-      '上級'
+      'Advanced'
     elsif skill_lower.include?('intermediate') || skill_lower.include?('mid')
-      '中級'
+      'Intermediate'
     elsif skill_lower.include?('basic') || skill_lower.include?('beginner')
-      '初級'
+      'Basic'
     else
-      '中級'
+      'Intermediate'
     end
   end
 
