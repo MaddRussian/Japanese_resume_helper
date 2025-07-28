@@ -405,6 +405,8 @@
 
   // Add event listeners for validation
   document.addEventListener('DOMContentLoaded', function() {
+    console.log('DOMContentLoaded event fired');
+
     // Initialize skills from existing form fields
     initializeSkills();
 
@@ -418,6 +420,7 @@
     initializeCertificationDisplay();
 
     // Initial validation
+    console.log('Running initial validation...');
     validateExperienceSection();
     validateEducationSection();
     validateCertificationSection();
@@ -441,13 +444,47 @@
     });
 
     // Re-initialize validation after form re-render (for validation errors)
+    // Use multiple timeouts to ensure it works even if the first one fails
     setTimeout(() => {
+      console.log('First timeout - re-initializing validation...');
       validateExperienceSection();
       validateEducationSection();
       validateCertificationSection();
       validateSkillSection();
+      console.log('Validation functions re-initialized (first timeout)');
     }, 100);
+
+    setTimeout(() => {
+      console.log('Second timeout - re-initializing validation...');
+      validateExperienceSection();
+      validateEducationSection();
+      validateCertificationSection();
+      validateSkillSection();
+      console.log('Validation functions re-initialized (second timeout)');
+    }, 500);
+
+    setTimeout(() => {
+      console.log('Third timeout - re-initializing validation...');
+      validateExperienceSection();
+      validateEducationSection();
+      validateCertificationSection();
+      validateSkillSection();
+      console.log('Validation functions re-initialized (third timeout)');
+    }, 1000);
   });
+
+  function initializeSkills() {
+    console.log('initializeSkills called');
+    // Initialize skills from existing form fields if any
+    const skillFields = document.querySelectorAll('.skill-field');
+    console.log('Skill fields found:', skillFields.length);
+
+    skillFields.forEach(field => {
+      if (field.value.trim() !== '') {
+        addSkillTag(field.value.trim());
+      }
+    });
+  }
 
   function initializeExperienceDisplay() {
     const experienceFields = document.querySelectorAll('#experience-original-form .experience-entry');
@@ -577,75 +614,102 @@
   }
 
   function validateEducationSection() {
+    console.log('validateEducationSection called');
     const educationEntries = document.querySelectorAll('#education-original-form .education-entry');
     const addBtn = document.getElementById('add-education-btn');
 
-    if (educationEntries.length === 0) {
-      addBtn.disabled = true;
+    console.log('Education entries found:', educationEntries.length);
+    console.log('Add button found:', addBtn);
+
+    if (!addBtn) {
+      console.log('Add education button not found');
       return;
     }
 
+    // Check if all required fields in the last entry are filled
     const lastEntry = educationEntries[educationEntries.length - 1];
-    const fields = lastEntry.querySelectorAll('input, textarea, select');
+    if (lastEntry) {
+      const fields = lastEntry.querySelectorAll('.education-field');
+      console.log('Fields found in last entry:', fields.length);
 
-    const allFilled = Array.from(fields).every(field => {
-      const value = field.value.trim();
-      return value !== '';
-    });
+      const allFilled = Array.from(fields).every(field => {
+        const value = field.value.trim();
+        console.log('Field value:', field.name, '=', value);
+        return value !== '';
+      });
 
-    addBtn.disabled = !allFilled;
+      addBtn.disabled = !allFilled;
+      console.log('Education validation - all filled:', allFilled, 'button disabled:', addBtn.disabled);
+    } else {
+      addBtn.disabled = false;
+      console.log('No education entries found, enabling button');
+    }
   }
 
-    function validateExperienceSection() {
+  function validateExperienceSection() {
+    console.log('validateExperienceSection called');
     const experienceEntries = document.querySelectorAll('#experience-original-form .experience-entry');
     const addBtn = document.getElementById('add-experience-btn');
-    const deleteBtns = document.querySelectorAll('#experience-original-form .experience-entry .btn-outline-danger');
 
-    if (experienceEntries.length === 0) {
-      addBtn.disabled = true;
+    console.log('Experience entries found:', experienceEntries.length);
+    console.log('Add button found:', addBtn);
+
+    if (!addBtn) {
+      console.log('Add experience button not found');
       return;
     }
 
+    // Check if all required fields in the last entry are filled
     const lastEntry = experienceEntries[experienceEntries.length - 1];
-    const fields = lastEntry.querySelectorAll('.experience-field');
+    if (lastEntry) {
+      const fields = lastEntry.querySelectorAll('.experience-field');
+      console.log('Fields found in last entry:', fields.length);
 
-    const allFilled = Array.from(fields).every(field => {
-      const value = field.value.trim();
-      return value !== '';
-    });
+      const allFilled = Array.from(fields).every(field => {
+        const value = field.value.trim();
+        console.log('Field value:', field.name, '=', value);
+        return value !== '';
+      });
 
-    addBtn.disabled = !allFilled;
-
-    // Show/hide delete buttons based on number of entries
-    deleteBtns.forEach(btn => {
-      btn.style.display = experienceEntries.length > 1 ? 'block' : 'none';
-    });
+      addBtn.disabled = !allFilled;
+      console.log('Experience validation - all filled:', allFilled, 'button disabled:', addBtn.disabled);
+    } else {
+      addBtn.disabled = false;
+      console.log('No experience entries found, enabling button');
+    }
   }
 
     function validateCertificationSection() {
+    console.log('validateCertificationSection called');
     const certificationEntries = document.querySelectorAll('#certification-original-form .certification-entry');
     const addBtn = document.getElementById('add-certification-btn');
-    const deleteBtns = document.querySelectorAll('#certification-original-form .certification-entry .btn-outline-danger');
 
-    if (certificationEntries.length === 0) {
-      addBtn.disabled = true;
+    console.log('Certification entries found:', certificationEntries.length);
+    console.log('Add button found:', addBtn);
+
+    if (!addBtn) {
+      console.log('Add certification button not found');
       return;
     }
 
+    // Check if all required fields in the last entry are filled
     const lastEntry = certificationEntries[certificationEntries.length - 1];
-    const fields = lastEntry.querySelectorAll('.certification-field');
+    if (lastEntry) {
+      const fields = lastEntry.querySelectorAll('.certification-field');
+      console.log('Fields found in last entry:', fields.length);
 
-    const allFilled = Array.from(fields).every(field => {
-      const value = field.value.trim();
-      return value !== '';
-    });
+      const allFilled = Array.from(fields).every(field => {
+        const value = field.value.trim();
+        console.log('Field value:', field.name, '=', value);
+        return value !== '';
+      });
 
-    addBtn.disabled = !allFilled;
-
-    // Show/hide delete buttons based on number of entries
-    deleteBtns.forEach(btn => {
-      btn.style.display = certificationEntries.length > 1 ? 'block' : 'none';
-    });
+      addBtn.disabled = !allFilled;
+      console.log('Certification validation - all filled:', allFilled, 'button disabled:', addBtn.disabled);
+    } else {
+      addBtn.disabled = false;
+      console.log('No certification entries found, enabling button');
+    }
   }
 
   function validateSkillSection() {
@@ -881,20 +945,38 @@
   }
 
   function addSkillFromInput() {
+    console.log('addSkillFromInput called');
     const input = document.getElementById('skill-input');
+    console.log('Input element found:', input);
+
+    if (!input) {
+      console.error('Skill input not found!');
+      return;
+    }
+
     const skillName = input.value.trim();
+    console.log('Skill name:', skillName);
 
     if (skillName !== '') {
+      console.log('Adding skill:', skillName);
       addSkillTag(skillName);
+
+      // Clear immediately
+      input.value = '';
+      input.focus();
+      console.log('Skill input cleared immediately');
+
+      // Also clear after a short delay in case the input is re-rendered
       setTimeout(() => {
-        // Clear after DOM update in case input is replaced
         const inputAgain = document.getElementById('skill-input');
-        if (inputAgain) {
+        if (inputAgain && inputAgain.value !== '') {
           inputAgain.value = '';
           inputAgain.focus();
-          console.log('Skill input cleared:', inputAgain.value);
+          console.log('Skill input cleared after timeout');
         }
-      }, 50);
+      }, 100);
+    } else {
+      console.log('Empty skill name, not adding');
     }
   }
 
@@ -924,7 +1006,14 @@
   }
 
   function addHiddenSkillField(skillName) {
-    const skillFieldsContainer = document.getElementById('skill-fields');
+    const skillFieldsContainer = document.getElementById('skills-fields');
+    console.log('Skill fields container found:', skillFieldsContainer);
+
+    if (!skillFieldsContainer) {
+      console.error('Skills fields container not found!');
+      return;
+    }
+
     const fieldHtml = `
       <div class="skill-entry">
         <input type="text" name="resume[skills_attributes][${skillIndex}][name]" class="form-control skill-field" value="${skillName}" style="display: none;">
